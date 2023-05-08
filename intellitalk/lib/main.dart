@@ -1,12 +1,11 @@
 import 'package:dart_openai/openai.dart';
 import 'package:flutter/material.dart';
-
-import 'env/env.dart';
+import 'package:intellitalk/src/screen_record/screen_record.dart';
 
 void main() {
-  OpenAI.organization = "org-1Kblirv4lYCscoMRWred49nU";
-  OpenAI.apiKey = Env.apiKey;
-  streamText();
+  // OpenAI.organization = "org-1Kblirv4lYCscoMRWred49nU";
+  // OpenAI.apiKey = Env.apiKey;
+  // streamText();
   runApp(const MyApp());
 }
 
@@ -44,7 +43,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: ScreenRecordPage(),
     );
   }
 }
