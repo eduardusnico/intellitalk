@@ -2,6 +2,8 @@ import 'package:dart_openai/openai.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intellitalk/env/env.dart';
+import 'package:intellitalk/src/presentations/auth/login_screen.dart';
+import 'package:intellitalk/src/presentations/auth/regist_screen.dart';
 
 import 'src/presentations/admin/admin_screen.dart';
 import 'src/presentations/conversation/conversation_screen.dart';
@@ -12,26 +14,34 @@ void main() {
   runApp(const MyApp());
 }
 
-// void fetchModelDavinci() async {
-//   OpenAIModelModel model =
-//       await OpenAI.instance.model.retrieve("text-davinci-003");
-//   print(model.id);
-// }
-
 /// The route configuration.
 final GoRouter _router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
-      name: 'admin',
+      name: 'login',
       path: '/',
-      builder: (BuildContext context, GoRouterState state) {
+      builder: (context, state) {
+        return const LoginScreen();
+      },
+    ),
+    GoRoute(
+      name: 'register',
+      path: '/regist',
+      builder: (context, state) {
+        return const RegisterScreen();
+      },
+    ),
+    GoRoute(
+      name: 'admin',
+      path: '/admin',
+      builder: (context, state) {
         return const AdminScreen();
       },
     ),
     GoRoute(
       name: 'conversation',
       path: '/conversations/:convoId',
-      builder: (BuildContext context, GoRouterState state) {
+      builder: (context, state) {
         return ChatScreen(
           convoId: state.pathParameters['convoId']!,
         );
@@ -46,9 +56,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       title: 'Intellitalk',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'Montserrat',
       ),
       routerConfig: _router,
     );

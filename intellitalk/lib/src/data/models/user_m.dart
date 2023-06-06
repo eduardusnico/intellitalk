@@ -16,7 +16,7 @@ class UserResponse {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'status': status,
-      'statusCode': statusCode,
+      'status_code': statusCode,
       'message': message,
       'user': user.toMap(),
     };
