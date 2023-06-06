@@ -1,11 +1,14 @@
 import 'package:dart_openai/openai.dart';
 import 'package:flutter/material.dart';
-import 'package:intellitalk/src/screen_record/screen_record.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intellitalk/env/env.dart';
+
+import 'src/presentations/admin/admin_screen.dart';
+import 'src/presentations/conversation/conversation_screen.dart';
 
 void main() {
-  // OpenAI.organization = "org-1Kblirv4lYCscoMRWred49nU";
-  // OpenAI.apiKey = Env.apiKey;
-  // streamText();
+  OpenAI.organization = "org-1Kblirv4lYCscoMRWred49nU";
+  OpenAI.apiKey = Env.apiKey;
   runApp(const MyApp());
 }
 
@@ -15,35 +18,39 @@ void main() {
 //   print(model.id);
 // }
 
-void streamText() {
-  Stream<OpenAIStreamCompletionModel> completionStream =
-      OpenAI.instance.completion.createStream(
-    model: "text-davinci-003",
-    prompt:
-        "You are a YC partner. You are doing a mock interview with me to prepare me for my Y Combinator interview. Play hardball. Ask tough questions about my startup. Make sure I'm making something people want. And that my idea is not a tarpit idea, i.e. an idea that a lot of people",
-    maxTokens: 100,
-    temperature: 0.5,
-    topP: 1,
-  );
-
-  completionStream.listen((event) {
-    final firstCompletionChoice = event.choices.first;
-    print(firstCompletionChoice.text); // ...
-  });
-}
+/// The route configuration.
+final GoRouter _router = GoRouter(
+  routes: <RouteBase>[
+    GoRoute(
+      name: 'admin',
+      path: '/',
+      builder: (BuildContext context, GoRouterState state) {
+        return const AdminScreen();
+      },
+    ),
+    GoRoute(
+      name: 'conversation',
+      path: '/conversations/:convoId',
+      builder: (BuildContext context, GoRouterState state) {
+        return ChatScreen(
+          convoId: state.pathParameters['convoId']!,
+        );
+      },
+    ),
+  ],
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Intellitalk',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ScreenRecordPage(),
+      routerConfig: _router,
     );
   }
 }
