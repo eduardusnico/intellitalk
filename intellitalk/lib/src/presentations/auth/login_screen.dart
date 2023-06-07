@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   const Spacer(),
                   Image.asset(
-                    '/images/logo_arkademi.png',
+                    '/images/logo_arkademi_blue.png',
                     height: 40,
                   ),
                 ],
@@ -110,18 +110,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const Text("Didn't have an account?"),
-                  TextButton(
-                    onPressed: () {
-                      context.pushReplacementNamed('register');
-                    },
-                    child: const Text('Regist here'),
-                  ),
-                ],
               ),
               const Spacer(),
             ],

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intellitalk/env/env.dart';
 import 'package:intellitalk/src/presentations/auth/login_screen.dart';
-import 'package:intellitalk/src/presentations/auth/regist_screen.dart';
 
 import 'src/presentations/admin/admin_screen.dart';
 import 'src/presentations/conversation/conversation_screen.dart';
@@ -22,13 +21,6 @@ final GoRouter _router = GoRouter(
       path: '/',
       builder: (context, state) {
         return const LoginScreen();
-      },
-    ),
-    GoRoute(
-      name: 'register',
-      path: '/regist',
-      builder: (context, state) {
-        return const RegisterScreen();
       },
     ),
     GoRoute(
