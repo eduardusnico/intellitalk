@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intellitalk/constants.dart';
 import 'package:intellitalk/src/data/dataproviders/backend.dart';
 import 'package:intellitalk/src/data/models/user_m.dart';
 
 class ConversationSection extends StatefulWidget {
-  const ConversationSection({
+  Function onDetailPressed;
+  ConversationSection({
     super.key,
+    required this.onDetailPressed,
   });
   @override
   State<ConversationSection> createState() => _ConversationSectionState();
@@ -18,7 +19,8 @@ class _ConversationSectionState extends State<ConversationSection> {
     'Nama',
     'Divisi',
     'Posisi',
-    'Link Interview'
+    'User Requirement',
+    'Transkrip Text'
   ];
 
   //
@@ -79,7 +81,9 @@ class _ConversationSectionState extends State<ConversationSection> {
                                     ? 150
                                     : i == 3
                                         ? 200
-                                        : 260,
+                                        : i == 4
+                                            ? 330
+                                            : null,
                         child: Text(
                           tableTitle[i],
                           textAlign: TextAlign.center,
@@ -151,18 +155,32 @@ class _ConversationSectionState extends State<ConversationSection> {
                                     textAlign: TextAlign.center,
                                   )),
                               Expanded(
-                                child: TextButton(
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 14),
+                                    child: Text(
+                                      listUser![i].skill,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                      textAlign: TextAlign.center,
+                                    )),
+                              ),
+                              Container(
+                                width: 150,
+                                padding: const EdgeInsets.only(
+                                    top: 14, bottom: 14, right: 20),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: kPrimaryBlue),
                                   onPressed: () {
-                                    context.goNamed('conversation',
-                                        pathParameters: {
-                                          'convoId': listUser![i].id
-                                        });
+                                    widget.onDetailPressed();
                                   },
-                                  child: Text(
-                                    listUser![i].link,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        color: kSecondaryBlue),
+                                  child: const Text(
+                                    'Detail',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: kWhite,
+                                    ),
                                   ),
                                 ),
                               ),

@@ -4,6 +4,7 @@ import 'package:intellitalk/constants.dart';
 import 'package:intellitalk/src/data/dataproviders/backend.dart';
 import 'package:intellitalk/src/presentations/admin/section/candidate_section.dart';
 import 'package:intellitalk/src/presentations/admin/section/conversation_section.dart';
+import 'package:intellitalk/src/presentations/transcript/transcript_screen.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -80,7 +81,7 @@ class _AdminScreenState extends State<AdminScreen> {
                       'Conversation',
                       style: TextStyle(
                           color: kWhite,
-                          fontWeight: indexSelected == 1
+                          fontWeight: indexSelected == 1 || indexSelected == 2
                               ? FontWeight.bold
                               : FontWeight.w500),
                     )
@@ -112,7 +113,21 @@ class _AdminScreenState extends State<AdminScreen> {
           ),
           indexSelected == 0
               ? const CandidateSection()
-              : const ConversationSection()
+              : indexSelected == 1
+                  ? ConversationSection(
+                      onDetailPressed: () {
+                        setState(() {
+                          indexSelected = 2;
+                        });
+                      },
+                    )
+                  : TranscriptScreen(
+                      onBackPressed: () {
+                        setState(() {
+                          indexSelected = 1;
+                        });
+                      },
+                    )
         ],
       ),
     );
