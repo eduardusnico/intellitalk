@@ -5,21 +5,22 @@ import 'package:http/http.dart' as http;
 import 'package:intellitalk/constants.dart';
 import 'package:intellitalk/src/data/models/messages_m.dart';
 import 'package:intellitalk/src/data/models/resp_list_message_m.dart';
+import 'package:intellitalk/src/data/models/resp_list_messages_m.dart';
 import 'package:intellitalk/src/data/models/resp_list_user_m.dart';
 import 'package:intellitalk/src/data/models/user_m.dart';
 import 'package:intellitalk/src/data/models/resp_user_m.dart';
 
 class Backend {
-  Future<List<User>?> fetchUserDoneInterview() async {
+  Future<List<Messages>?> fetchUserDoneInterview() async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/api/v1/users/conversations'));
-      final data = ResponseListUser.fromJson(response.body);
+      final data = ResponseListMessages.fromJson(response.body);
       if (data.status == true) {
-        return data.users.reversed.toList();
+        return data.data.reversed.toList();
       }
-    } catch (e) {
-      log('$e');
+    } catch (e, st) {
+      log('$e $st');
     }
     return null;
   }
@@ -39,10 +40,24 @@ class Backend {
     return null;
   }
 
-  Future<bool> postConversation() async {
+  Future<bool> postConversation(List listConvo, String name, String id) async {
     try {
-      final response =
-          await http.post(Uri.parse('$baseUrl/api/v1/conversations'));
+      Map<String, dynamic> body = {};
+      List<dynamic> temp = [];
+
+      for (int i = 1; i < listConvo.length; i++) {
+        if (i % 2 != 0) {
+          temp.add({'sender': 'bot', "message": listConvo[i]});
+        } else {
+          temp.add({'sender': name, 'message': listConvo[i]});
+        }
+      }
+      body = {"user_id": id, "messages": temp};
+      final response = await http.post(
+          Uri.parse(
+            '$baseUrl/api/v1/conversations',
+          ),
+          body: json.encode(body));
       final data = json.decode(response.body);
       if (data['status'] == true) {
         return true;

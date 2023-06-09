@@ -10,6 +10,7 @@ class User {
   String skill;
   int quantity;
   String link;
+  int status;
 
   User({
     required this.id,
@@ -20,6 +21,7 @@ class User {
     required this.skill,
     required this.quantity,
     required this.link,
+    required this.status,
   });
 
   Map<String, dynamic> toMap() {
@@ -32,20 +34,21 @@ class User {
       'skill': skill,
       'quantity': quantity,
       'link': link,
+      'status': status,
     };
   }
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'] as String,
-      name: map['name'] as String,
-      email: map['email'] as String,
-      division: map['division'] as String,
-      position: map['position'] as String,
-      skill: map['skill'] as String,
-      quantity: map['quantity'] == null ? 2 : map['quantity'] as int,
-      link: map['link'] as String,
-    );
+        id: map['id'] as String,
+        name: map['name'] as String,
+        email: map['email'] as String,
+        division: map['division'] as String,
+        position: map['position'] as String,
+        skill: map['skill'] as String,
+        quantity: map['quantity'] == null ? 2 : map['quantity'] as int,
+        link: map['link'] as String,
+        status: map['status'] == null ? 0 : map['status'] as int);
   }
 
   String toJson() => json.encode(toMap());

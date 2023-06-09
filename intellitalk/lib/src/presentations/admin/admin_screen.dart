@@ -113,21 +113,7 @@ class _AdminScreenState extends State<AdminScreen> {
           ),
           indexSelected == 0
               ? const CandidateSection()
-              : indexSelected == 1
-                  ? ConversationSection(
-                      onDetailPressed: () {
-                        setState(() {
-                          indexSelected = 2;
-                        });
-                      },
-                    )
-                  : TranscriptScreen(
-                      onBackPressed: () {
-                        setState(() {
-                          indexSelected = 1;
-                        });
-                      },
-                    )
+              : const ConversationSection()
         ],
       ),
     );

@@ -478,9 +478,9 @@ class _CandidateSectionState extends State<CandidateSection> {
                               Expanded(
                                 child: TextButton(
                                   onPressed: () {
-                                    context.goNamed('conversation',
+                                    context.goNamed('preparation',
                                         pathParameters: {
-                                          'convoId': listUser![i].id
+                                          'prepId': listUser![i].id
                                         });
                                   },
                                   child: Text(
