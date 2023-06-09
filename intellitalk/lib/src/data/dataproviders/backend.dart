@@ -5,22 +5,21 @@ import 'package:http/http.dart' as http;
 import 'package:intellitalk/constants.dart';
 import 'package:intellitalk/src/data/models/messages_m.dart';
 import 'package:intellitalk/src/data/models/resp_list_message_m.dart';
-import 'package:intellitalk/src/data/models/resp_list_messages_m.dart';
 import 'package:intellitalk/src/data/models/resp_list_user_m.dart';
 import 'package:intellitalk/src/data/models/user_m.dart';
 import 'package:intellitalk/src/data/models/resp_user_m.dart';
 
 class Backend {
-  Future<List<Messages>?> fetchUserDoneInterview() async {
+  Future<List<User>?> fetchUserDoneInterview() async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/api/v1/users/conversations'));
-      final data = ResponseListMessages.fromJson(response.body);
+      final data = ResponseListUser.fromJson(response.body);
       if (data.status == true) {
-        return data.data.reversed.toList();
+        return data.users.reversed.toList();
       }
-    } catch (e, st) {
-      log('$e $st');
+    } catch (e) {
+      log('$e');
     }
     return null;
   }

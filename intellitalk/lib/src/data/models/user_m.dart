@@ -47,7 +47,7 @@ class User {
         position: map['position'] as String,
         skill: map['skill'] as String,
         quantity: map['quantity'] == null ? 2 : map['quantity'] as int,
-        link: map['link'] as String,
+        link: map['link'] == null ? '' : map['link'] as String,
         status: map['status'] == null ? 0 : map['status'] as int);
   }
 

@@ -123,96 +123,100 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
                                 vertical: 20, horizontal: 30),
-                            child: Column(
-                              children: [
-                                Image.asset(
-                                  'images/logo_people.png',
-                                  height: 30,
-                                ),
-                                const SizedBox(height: 10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Identity Candidate',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16),
-                                    ),
-                                    const SizedBox(height: 15),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                      child: Row(
-                                        children: [
-                                          const Text(
-                                            'Name :',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          Text(user!.name)
-                                        ],
+                            child: Expanded(
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    'images/logo_people.png',
+                                    height: 30,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Identity Candidate',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                      child: Row(
-                                        children: [
-                                          const Text(
-                                            'Email :',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          Text(user!.email)
-                                        ],
+                                      const SizedBox(height: 15),
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Name :',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Text(user!.name)
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                      child: Row(
-                                        children: [
-                                          const Text(
-                                            'Division :',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          Text(user!.division)
-                                        ],
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Email :',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Text(user!.email)
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                      child: Row(
-                                        children: [
-                                          const Text(
-                                            'Position :',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          Text(user!.position)
-                                        ],
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Division :',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Text(user!.division)
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 12),
-                                      child: Row(
-                                        children: [
-                                          const Text(
-                                            'User Requirement :',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          Text(user!.skill)
-                                        ],
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Position :',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Text(user!.position)
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                )
-                              ],
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 12),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Text(
+                                              'User Requirement :',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            Text(user!.skill)
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),

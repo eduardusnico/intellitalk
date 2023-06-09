@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intellitalk/constants.dart';
 import 'package:intellitalk/src/data/dataproviders/backend.dart';
-import 'package:intellitalk/src/data/models/messages_m.dart';
 import 'package:intellitalk/src/data/models/user_m.dart';
 import 'package:intellitalk/src/presentations/transcript/transcript_screen.dart';
 
@@ -27,8 +26,7 @@ class _ConversationSectionState extends State<ConversationSection> {
   bool isLoadingPage = true;
   bool seeDetail = false;
   String selectedId = '';
-  late List<User> listAllUsers;
-  List<Messages>? listAllMessages;
+  List<User>? listAllUsers;
 
   //
   final backend = Backend();
@@ -40,17 +38,11 @@ class _ConversationSectionState extends State<ConversationSection> {
   }
 
   void asyncFunction() async {
-    listAllMessages = await backend.fetchUserDoneInterview();
-    if (listAllMessages != null) {
-      // List<User> temp = [];
-      // for (int i = 0; i < listAllMessages!.length; i++) {
-      //   final user = await backend.fetchDataUser(listAllMessages![i].userId);
-      //   temp.add(user!);
-      // }
-      // listAllUsers.addAll(temp);
-      // setState(() {
-      //   isLoadingPage = false;
-      // });
+    listAllUsers = await backend.fetchUserDoneInterview();
+    if (listAllUsers != null) {
+      setState(() {
+        isLoadingPage = false;
+      });
     }
   }
 
@@ -121,15 +113,15 @@ class _ConversationSectionState extends State<ConversationSection> {
                       const SizedBox(
                         height: 18,
                       ),
-                      listAllUsers.isEmpty
+                      listAllUsers!.isEmpty
                           ? const Text('belum ada kandidat')
                           : Column(
                               children: [
                                 for (int i = 0;
                                     i <
-                                        (listAllUsers.length > 6
+                                        (listAllUsers!.length > 6
                                             ? 6
-                                            : listAllUsers.length);
+                                            : listAllUsers!.length);
                                     i++)
                                   Card(
                                     shape: RoundedRectangleBorder(
@@ -153,7 +145,7 @@ class _ConversationSectionState extends State<ConversationSection> {
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 14),
                                           child: Text(
-                                            listAllUsers[i].name,
+                                            listAllUsers![i].name,
                                             maxLines: 2,
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.w600),
@@ -164,7 +156,7 @@ class _ConversationSectionState extends State<ConversationSection> {
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 14),
                                           child: Text(
-                                            listAllUsers[i].division,
+                                            listAllUsers![i].division,
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.w600),
                                             textAlign: TextAlign.center,
@@ -174,7 +166,7 @@ class _ConversationSectionState extends State<ConversationSection> {
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 14),
                                           child: Text(
-                                            listAllUsers[i].position,
+                                            listAllUsers![i].position,
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.w600),
                                             textAlign: TextAlign.center,
@@ -184,7 +176,7 @@ class _ConversationSectionState extends State<ConversationSection> {
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 14),
                                             child: Text(
-                                              listAllUsers[i].skill,
+                                              listAllUsers![i].skill,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.w600),
                                               textAlign: TextAlign.center,
@@ -201,7 +193,7 @@ class _ConversationSectionState extends State<ConversationSection> {
                                             setState(() {
                                               seeDetail = true;
                                             });
-                                            selectedId = listAllUsers[i].id;
+                                            selectedId = listAllUsers![i].id;
                                           },
                                           child: const Text(
                                             'Detail',
