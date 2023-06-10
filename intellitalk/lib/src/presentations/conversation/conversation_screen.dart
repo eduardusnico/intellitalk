@@ -14,6 +14,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final be = Backend();
+  String header = 'intellitalk interview';
 
   @override
   void initState() {
@@ -40,6 +41,7 @@ class _ChatScreenState extends State<ChatScreen> {
   List<String> conversations = [];
   List<OpenAIChatCompletionChoiceMessageModel> recentMessage = [];
   User? user;
+  final ScrollController _chatScrollController = ScrollController();
 
   void askGpt(String question) async {
     setState(() {
@@ -86,8 +88,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String header = 'intellitalk interview';
-
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(150),
@@ -136,6 +136,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 19),
                 ))
               : SingleChildScrollView(
+                  controller: _chatScrollController,
                   child: Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(
@@ -148,7 +149,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             margin: const EdgeInsets.only(bottom: 12),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
-                                color: Colors.grey[400]),
+                                color: const Color(0xffD8D8D8)),
                             padding: const EdgeInsets.symmetric(
                                 vertical: 14, horizontal: 10),
                             child: Column(
@@ -192,7 +193,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     borderRadius: BorderRadius.circular(8),
                                     color: i % 2 == 0
                                         ? Colors.blue[600]
-                                        : Colors.grey[400],
+                                        : const Color(0xffD8D8D8),
                                   ),
                                   child: i % 2 == 0
                                       ? Text(
