@@ -248,8 +248,9 @@ class _ChatScreenState extends State<ChatScreen> {
                   (isInterviewEnded == true || user!.status == 1))
               ? const SizedBox()
               : Container(
-                  color: Colors.blue[700],
+                  color: const Color(0xff035BA7),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Padding(
@@ -287,21 +288,21 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
                       ),
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.grey[300]),
-                          onPressed: () {
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        child: InkWell(
+                          onTap: () {
                             if (_formKey.currentState!.validate() == true) {
                               askGpt(_chatController.text);
                             }
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 12.0),
-                            child: Icon(
-                              Icons.keyboard_return,
-                              color: Colors.black45,
-                            ),
-                          )),
+                          child: const Icon(
+                            Icons.send_rounded,
+                            size: 52,
+                            color: Color(0xff1C90D9),
+                          ),
+                        ),
+                      ),
                       const SizedBox(width: 20)
                     ],
                   ),
