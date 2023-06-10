@@ -86,10 +86,47 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String header = 'intellitalk interview';
+
     return Scaffold(
+      appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(150),
+          child: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              color: const Color(0xff035BA7),
+              height: 150,
+              child: Column(
+                children: [
+                  Text(
+                    header.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    '${user?.position ?? ''} - ${user?.division.toUpperCase()}',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )),
       body: isLoadingPage == true
-          ? const Center(
-              child: CircularProgressIndicator(),
+          ? SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
             )
           : user!.status == 1
               ? const Center(
@@ -114,10 +151,29 @@ class _ChatScreenState extends State<ChatScreen> {
                                 color: Colors.grey[400]),
                             padding: const EdgeInsets.symmetric(
                                 vertical: 14, horizontal: 10),
-                            child: Text(
-                              'Halo ${user!.name} selamat datang di interview arkademi!, sekarang kita akan mulai interview, ketik "Saya siap" jika kamu sudah siap',
-                              textAlign: TextAlign.left,
-                              maxLines: 4,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Arkademi Bot',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xff035BA7)),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  'Halo ${user!.name} selamat datang di interview arkademi! sekarang kita akan mulai interview, ketik "Saya siap" jika kamu sudah siap',
+                                  textAlign: TextAlign.left,
+                                  maxLines: 4,
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xff242A37)),
+                                ),
+                              ],
                             ),
                           ),
                           for (int i = 0; i < conversations.length; i++)
@@ -138,17 +194,41 @@ class _ChatScreenState extends State<ChatScreen> {
                                         ? Colors.blue[600]
                                         : Colors.grey[400],
                                   ),
-                                  child: Text(
-                                    conversations[i],
-                                    style: TextStyle(
-                                        color: i % 2 == 0
-                                            ? Colors.white
-                                            : Colors.black),
-                                    maxLines: 10,
-                                    textAlign: i % 2 == 0
-                                        ? TextAlign.right
-                                        : TextAlign.left,
-                                  ),
+                                  child: i % 2 == 0
+                                      ? Text(
+                                          conversations[i],
+                                          style: TextStyle(
+                                              color: i % 2 == 0
+                                                  ? Colors.white
+                                                  : Colors.black),
+                                          maxLines: 10,
+                                          textAlign: i % 2 == 0
+                                              ? TextAlign.right
+                                              : TextAlign.left,
+                                        )
+                                      : Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              'Arkademi Bot',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(0xff035BA7)),
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              conversations[i],
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                              maxLines: 10,
+                                              textAlign: TextAlign.left,
+                                            ),
+                                          ],
+                                        ),
                                 ),
                               ],
                             ),
