@@ -276,6 +276,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 return null;
                               },
                               decoration: InputDecoration(
+                                hintText: 'Ketik Pesan',
                                 errorStyle:
                                     const TextStyle(color: Colors.white),
                                 filled: true,
