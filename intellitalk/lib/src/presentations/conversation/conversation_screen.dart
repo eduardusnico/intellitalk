@@ -1,12 +1,18 @@
 import 'package:dart_openai/openai.dart';
+import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:intellitalk/src/data/dataproviders/backend.dart';
 import 'package:intellitalk/src/data/models/user_m.dart';
 
 class ChatScreen extends StatefulWidget {
   final String convoId;
+  final html.MediaRecorder recorder;
 
-  const ChatScreen({super.key, required this.convoId});
+  const ChatScreen({
+    super.key,
+    required this.convoId,
+    required this.recorder,
+  });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -15,22 +21,6 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final be = Backend();
   String header = 'intellitalk interview';
-
-  @override
-  void initState() {
-    super.initState();
-    asynFuct();
-  }
-
-  void asynFuct() async {
-    user = await be.fetchDataUser(widget.convoId);
-    if (user != null) {
-      setState(() {
-        isLoadingPage = false;
-      });
-    }
-  }
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _chatController =
       TextEditingController(text: 'Saya siap');
@@ -42,6 +32,36 @@ class _ChatScreenState extends State<ChatScreen> {
   List<OpenAIChatCompletionChoiceMessageModel> recentMessage = [];
   User? user;
   final ScrollController _chatScrollController = ScrollController();
+  late html.MediaRecorder mediaRecorder;
+
+  @override
+  void initState() {
+    super.initState();
+    asynFuct();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.recorder.stop();
+  }
+
+  void asynFuct() async {
+    user = await be.fetchDataUser(widget.convoId);
+    if (user != null) {
+      setState(() {
+        isLoadingPage = false;
+      });
+      checkIsFinish();
+    }
+  }
+
+  void checkIsFinish() {
+    if (user?.status == 1) {
+      widget.recorder.stop();
+    }
+    mediaRecorder = widget.recorder;
+  }
 
   void askGpt(String question) async {
     setState(() {

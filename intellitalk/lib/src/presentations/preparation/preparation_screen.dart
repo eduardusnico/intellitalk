@@ -1,4 +1,10 @@
+import 'dart:developer';
+import 'dart:html' as html;
+import 'dart:js' as js;
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screen_recording/flutter_screen_recording.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intellitalk/constants.dart';
 
@@ -16,6 +22,109 @@ class _PreparationScreenState extends State<PreparationScreen> {
     'Please ensure you have a stable internet connection',
     'To start interview, click start interview button'
   ];
+
+  final bool _isStartedRecord = false;
+
+  late html.VideoElement _preview;
+  late html.MediaRecorder _recorder;
+  late html.VideoElement _result;
+
+  bool _isPermission = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _preview = html.VideoElement()
+      ..autoplay = true
+      ..muted = true
+      ..width = html.window.innerWidth!
+      ..height = html.window.innerHeight!;
+
+    _result = html.VideoElement()
+      ..autoplay = false
+      ..muted = false
+      ..width = html.window.innerWidth!
+      ..height = html.window.innerHeight!
+      ..controls = true;
+
+    // ignore: undefined_prefixed_name
+    ui.platformViewRegistry.registerViewFactory('preview', (int _) => _preview);
+
+    // ignore: undefined_prefixed_name
+    ui.platformViewRegistry.registerViewFactory('result', (int _) => _result);
+  }
+
+  Future<html.MediaStream?> _openCamera() async {
+    final html.MediaStream? stream = await html.window.navigator.mediaDevices
+        ?.getUserMedia({'video': true, 'audio': true});
+    _preview.srcObject = stream;
+    return stream;
+  }
+
+  void handlePermission() async {
+    try {
+      if (!_isPermission) {
+        final html.MediaStream? stream = await _openCamera();
+        startRecording(stream!);
+        _isPermission = true;
+        setState(() {});
+        Future.delayed(
+            Duration.zero,
+            () => context.goNamed('conversation', extra: {
+                  'recorder': _recorder,
+                }, pathParameters: {
+                  'convoId': widget.convoId
+                }));
+      }
+    } catch (e) {
+      log('ERROR HANDLE PERMISSION $e');
+    }
+  }
+
+  void startRecording(html.MediaStream stream) {
+    _recorder = html.MediaRecorder(stream);
+    _recorder.start();
+    html.Blob blob = html.Blob([]);
+
+    _recorder.addEventListener('dataavailable', (event) {
+      blob = js.JsObject.fromBrowserObject(event)['data'];
+      print('blob $blob');
+    }, true);
+
+    _recorder.addEventListener('stop', (event) {
+      final url = html.Url.createObjectUrl(blob);
+      _result.src = url;
+      print('url ${_result.src}');
+
+      stream.getTracks().forEach((track) {
+        if (track.readyState == 'live') {
+          track.stop();
+          print('track stop');
+        }
+      });
+    });
+  }
+
+  void stopRecording() => _recorder.stop();
+
+  // void testRecord() async {
+  //   MediaDevices({
+  //     video: true,
+  //   }).getUserMedia();
+  //   FlutterScreenRecording.globalForegroundService();
+  //   _isStartedRecord = await FlutterScreenRecording.startRecordScreen(
+  //       'test_record',
+  //       titleNotification: 'Recorded!');
+  //   log('CALLED RECORD $_isStartedRecord');
+  //   setState(() {});
+  //   Future.delayed(const Duration(seconds: 15), () => stopRecord());
+  // }
+
+  void stopRecord() async {
+    String path = await FlutterScreenRecording.stopRecordScreen;
+    log('PATH $path');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,10 +216,7 @@ class _PreparationScreenState extends State<PreparationScreen> {
                     backgroundColor: kSecondaryBlue,
                     padding: const EdgeInsets.symmetric(
                         vertical: 24, horizontal: 34)),
-                onPressed: () {
-                  context.goNamed('conversation',
-                      pathParameters: {'convoId': widget.convoId});
-                },
+                onPressed: () => handlePermission(),
                 child: const Text(
                   'Start Interview',
                   style: TextStyle(fontWeight: FontWeight.w600),
