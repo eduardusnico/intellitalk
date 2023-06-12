@@ -39,9 +39,7 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
   @override
   Widget build(BuildContext context) {
     return isLoadingPage == true
-        ? const Center(
-            child: CircularProgressIndicator(),
-          )
+        ? const Expanded(child: Center(child: CircularProgressIndicator()))
         : SingleChildScrollView(
             child: Container(
               padding: EdgeInsets.only(
@@ -64,6 +62,7 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
                       ),
                     ),
                   ),
+                  const SizedBox(height: 10),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -185,14 +184,20 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
-                                      child: Row(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
                                           const Text(
                                             'Position :',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600),
                                           ),
-                                          Text(user!.position)
+                                          Text(
+                                            user!.position,
+                                            maxLines: 3,
+                                          )
                                         ],
                                       ),
                                     ),
@@ -209,7 +214,10 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600),
                                           ),
-                                          Text(user!.skill)
+                                          Text(
+                                            user!.skill,
+                                            maxLines: 3,
+                                          )
                                         ],
                                       ),
                                     ),

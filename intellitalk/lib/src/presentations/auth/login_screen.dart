@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intellitalk/constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,6 +11,22 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    asyncFunction();
+  }
+
+  void asyncFunction() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool('isLogin') == true) {
+      context.goNamed('admin');
+    }
+  }
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,16 +40,16 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
               Text(
-                'Hello Friend!',
+                'Welcome to Intellitalk',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: kWhite, fontSize: 44),
+                    fontWeight: FontWeight.bold, color: kWhite, fontSize: 29),
               ),
               SizedBox(height: 30),
               Text(
-                'This is bot interview arkademi,\nadmin must login first to input data\ncandidate.',
+                'Login first to add new candidate,\nor see candidate results',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    fontWeight: FontWeight.w500, color: kWhite, fontSize: 20),
+                    fontWeight: FontWeight.w500, color: kWhite, fontSize: 17),
               )
             ],
           ),
@@ -46,73 +63,99 @@ class _LoginScreenState extends State<LoginScreen> {
               left: MediaQuery.of(context).size.width * 0.07),
           width: MediaQuery.of(context).size.width * 0.5,
           height: MediaQuery.of(context).size.height,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  const Spacer(),
-                  Image.asset(
-                    '/images/logo_arkademi_blue.png',
-                    height: 40,
-                  ),
-                ],
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-              const Text(
-                'Welcome to\nArkademi',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
-              ),
-              const SizedBox(height: 28),
-              const Text(
-                'Email',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-              ),
-              const SizedBox(height: 5),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.25,
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Spacer(),
+                    Image.asset(
+                      '/images/logo_arkademi_blue.png',
+                      height: 40,
+                    ),
+                  ],
+                ),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.3),
+                const Text(
+                  'Username',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                ),
+                const SizedBox(height: 5),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  child: TextFormField(
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Field tidak boleh kosong';
+                      } else if (value.toLowerCase() != 'admin') {
+                        return 'Username salah';
+                      } else {
+                        return null;
+                      }
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 14),
-              const Text(
-                'Password',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
-              ),
-              const SizedBox(height: 5),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.25,
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                const SizedBox(height: 14),
+                const Text(
+                  'Password',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 12),
+                ),
+                const SizedBox(height: 5),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  child: TextFormField(
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Field tidak boleh kosong';
+                      } else if (value != 'admin') {
+                        return 'Password salah';
+                      } else {
+                        return null;
+                      }
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(6),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 50),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.25,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: kSecondaryBlue,
-                      padding: const EdgeInsets.symmetric(vertical: 24)),
-                  onPressed: () {
-                    context.goNamed('admin');
-                  },
-                  child: const Text(
-                    'LOGIN',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                const SizedBox(height: 50),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)),
+                        backgroundColor: kPrimaryBlue,
+                        padding: const EdgeInsets.symmetric(vertical: 24)),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate() == true) {
+                        final prefs = await SharedPreferences.getInstance();
+                        print('set prefs is login');
+                        await prefs
+                            .setBool('isLogin', true)
+                            .then((value) => context.goNamed('admin'));
+                      }
+                    },
+                    child: const Text(
+                      'Login',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                    ),
                   ),
                 ),
-              ),
-              const Spacer(),
-            ],
+                const Spacer(),
+              ],
+            ),
           ),
         ),
       ]),

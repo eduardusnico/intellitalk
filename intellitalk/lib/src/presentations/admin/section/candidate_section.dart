@@ -50,6 +50,14 @@ class _CandidateSectionState extends State<CandidateSection> {
     }
   }
 
+  void clearTextController() {
+    _nameTxt.clear();
+    _positionTxt.clear();
+    _divisionTxt.clear();
+    _quantityTxt.clear();
+    _skillTxt.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return isLoadingPage == true
@@ -74,6 +82,7 @@ class _CandidateSectionState extends State<CandidateSection> {
                   ElevatedButton(
                       onPressed: () async {
                         showDialog(
+                          barrierDismissible: false,
                           context: context,
                           builder: (context) {
                             return Dialog(
@@ -279,6 +288,7 @@ class _CandidateSectionState extends State<CandidateSection> {
                                                           horizontal: 34),
                                                       backgroundColor: kGrey2),
                                                   onPressed: () {
+                                                    clearTextController();
                                                     context.pop();
                                                   },
                                                   child: const Text(
@@ -328,19 +338,21 @@ class _CandidateSectionState extends State<CandidateSection> {
                                                                           .text));
                                                       if (successAddCandidate ==
                                                           true) {
+                                                        clearTextController();
+                                                        context.pop();
                                                         setState(() {
                                                           isLoadingPage = true;
                                                         });
+
                                                         listUser = await backend
                                                             .fetchAllUser();
-                                                        setState(() {
-                                                          isLoadingPage = false;
-                                                        });
                                                         Future.delayed(
                                                             const Duration(
-                                                                seconds: 1),
-                                                            () =>
-                                                                context.pop());
+                                                                seconds: 2),
+                                                            () => setState(() {
+                                                                  isLoadingPage =
+                                                                      false;
+                                                                }));
                                                       }
                                                     }
                                                   },

@@ -46,7 +46,7 @@ class Backend {
 
       for (int i = 1; i < listConvo.length; i++) {
         if (i % 2 != 0) {
-          temp.add({'sender': 'bot', "message": listConvo[i]});
+          temp.add({'sender': 'Arkademi Bot', "message": listConvo[i]});
         } else {
           temp.add({'sender': name, 'message': listConvo[i]});
         }

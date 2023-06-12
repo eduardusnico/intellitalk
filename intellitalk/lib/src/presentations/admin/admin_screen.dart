@@ -4,7 +4,7 @@ import 'package:intellitalk/constants.dart';
 import 'package:intellitalk/src/data/dataproviders/backend.dart';
 import 'package:intellitalk/src/presentations/admin/section/candidate_section.dart';
 import 'package:intellitalk/src/presentations/admin/section/conversation_section.dart';
-import 'package:intellitalk/src/presentations/transcript/transcript_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -90,8 +90,9 @@ class _AdminScreenState extends State<AdminScreen> {
               ),
               const SizedBox(height: 20),
               InkWell(
-                onTap: () {
-                  context.pushReplacementNamed('login');
+                onTap: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  prefs.clear().then((value) => context.goNamed('login'));
                 },
                 child: Row(
                   children: [

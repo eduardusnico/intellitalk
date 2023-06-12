@@ -1,6 +1,7 @@
 import 'package:dart_openai/openai.dart';
 // import 'dart:html' as html;
 import 'package:flutter/material.dart';
+import 'package:intellitalk/constants.dart';
 import 'package:intellitalk/src/data/dataproviders/backend.dart';
 import 'package:intellitalk/src/data/models/user_m.dart';
 
@@ -309,6 +310,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
                       ),
+                      const SizedBox(width: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12.0),
                         child: InkWell(
@@ -317,11 +319,8 @@ class _ChatScreenState extends State<ChatScreen> {
                               askGpt(_chatController.text);
                             }
                           },
-                          child: const Icon(
-                            Icons.send_rounded,
-                            size: 52,
-                            color: Color(0xff1C90D9),
-                          ),
+                          child: const Icon(Icons.send_rounded,
+                              size: 33, color: kWhite),
                         ),
                       ),
                       const SizedBox(width: 20)
