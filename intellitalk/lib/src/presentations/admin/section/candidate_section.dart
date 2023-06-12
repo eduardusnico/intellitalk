@@ -336,6 +336,11 @@ class _CandidateSectionState extends State<CandidateSection> {
                                                         setState(() {
                                                           isLoadingPage = false;
                                                         });
+                                                        Future.delayed(
+                                                            const Duration(
+                                                                seconds: 1),
+                                                            () =>
+                                                                context.pop());
                                                       }
                                                     }
                                                   },

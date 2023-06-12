@@ -19,7 +19,6 @@ class _ConversationSectionState extends State<ConversationSection> {
     'Divisi',
     'Posisi',
     'User Requirement',
-    'Transkrip Text'
   ];
 
   //
@@ -100,7 +99,8 @@ class _ConversationSectionState extends State<ConversationSection> {
                                                     : null,
                                 child: Text(
                                   tableTitle[i],
-                                  textAlign: TextAlign.center,
+                                  textAlign:
+                                      i == 4 ? TextAlign.end : TextAlign.center,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: kGrey3,
