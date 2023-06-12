@@ -48,7 +48,7 @@ class _ConversationSectionState extends State<ConversationSection> {
   @override
   Widget build(BuildContext context) {
     return isLoadingPage == true
-        ? const Center(child: CircularProgressIndicator())
+        ? const Expanded(child: Center(child: CircularProgressIndicator()))
         : isLoadingPage == false && seeDetail == true
             ? TranscriptScreen(
                 selectedId: selectedId,

@@ -53,7 +53,7 @@ class _CandidateSectionState extends State<CandidateSection> {
   @override
   Widget build(BuildContext context) {
     return isLoadingPage == true
-        ? const Center(child: CircularProgressIndicator())
+        ? const Expanded(child: Center(child: CircularProgressIndicator()))
         : Container(
             padding: EdgeInsets.only(
               top: MediaQuery.of(context).size.height * 0.08,
