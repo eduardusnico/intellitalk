@@ -35,10 +35,10 @@ final GoRouter _router = GoRouter(
       name: 'conversation',
       path: '/conversations/:convoId',
       builder: (context, state) {
-        Map<String, dynamic> dataState = state.extra as Map<String, dynamic>;
+        // Map<String, dynamic> dataState = state.extra as Map<String, dynamic>;
         return ChatScreen(
           convoId: state.pathParameters['convoId']!,
-          recorder: dataState['recorder'],
+          // recorder: dataState['recorder'],
         );
       },
     ),

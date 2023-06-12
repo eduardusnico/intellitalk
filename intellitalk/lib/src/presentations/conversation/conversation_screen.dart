@@ -1,17 +1,17 @@
 import 'package:dart_openai/openai.dart';
-import 'dart:html' as html;
+// import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:intellitalk/src/data/dataproviders/backend.dart';
 import 'package:intellitalk/src/data/models/user_m.dart';
 
 class ChatScreen extends StatefulWidget {
   final String convoId;
-  final html.MediaRecorder recorder;
+  // final html.MediaRecorder recorder;
 
   const ChatScreen({
     super.key,
     required this.convoId,
-    required this.recorder,
+    // required this.recorder,
   });
 
   @override
@@ -32,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   List<OpenAIChatCompletionChoiceMessageModel> recentMessage = [];
   User? user;
   final ScrollController _chatScrollController = ScrollController();
-  late html.MediaRecorder mediaRecorder;
+  // late html.MediaRecorder mediaRecorder;
 
   @override
   void initState() {
@@ -43,7 +43,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     super.dispose();
-    widget.recorder.stop();
+    // widget.recorder.stop();
   }
 
   void asynFuct() async {
@@ -52,16 +52,16 @@ class _ChatScreenState extends State<ChatScreen> {
       setState(() {
         isLoadingPage = false;
       });
-      checkIsFinish();
+      // checkIsFinish();
     }
   }
 
-  void checkIsFinish() {
-    if (user?.status == 1) {
-      widget.recorder.stop();
-    }
-    mediaRecorder = widget.recorder;
-  }
+  // void checkIsFinish() {
+  //   if (user?.status == 1) {
+  //     widget.recorder.stop();
+  //   }
+  //   mediaRecorder = widget.recorder;
+  // }
 
   void askGpt(String question) async {
     setState(() {
