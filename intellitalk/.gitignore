@@ -133,5 +133,5 @@ app.*.symbols
 !.vscode/settings.json
 
 # E
-.env
-env.g.dart
+# .env
+# env.g.dart
