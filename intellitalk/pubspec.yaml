@@ -40,6 +40,7 @@ dependencies:
   dart_openai: 1.9.91
   go_router: 7.1.1
   http: 0.13.6
+  slide_countdown: ^0.6.0
   # flutter_screen_recording: 2.0.8
   # flutter_screen_recording_web: 1.0.4
 

@@ -119,20 +119,20 @@ class _CandidateSectionState extends State<CandidateSection> {
     _skillTxt.clear();
   }
 
-  void _searchPosition(String text, void Function(void Function()) setState) {
+  void _searchPosition(String text, void Function(void Function()) newState) {
     _constainsPosition.clear();
-
+    _position = '';
     if (text.isNotEmpty) {
       final result = _listPosition
           .where(
               (element) => element.toLowerCase().contains(text.toLowerCase()))
           .toSet()
           .toList();
-      setState(() {
+      newState(() {
         _constainsPosition.addAll(result);
       });
     } else {
-      setState(() {
+      newState(() {
         _constainsPosition.clear();
       });
     }
@@ -176,8 +176,7 @@ class _CandidateSectionState extends State<CandidateSection> {
                           barrierDismissible: false,
                           context: context,
                           builder: (context) {
-                            return StatefulBuilder(
-                                builder: (context, setState) {
+                            return StatefulBuilder(builder: (ctx, newState) {
                               return Dialog(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(26),
@@ -194,11 +193,9 @@ class _CandidateSectionState extends State<CandidateSection> {
                                           Column(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              Text(
-                                                _constainsPosition.isNotEmpty
-                                                    ? 'diganti'
-                                                    : 'Add New Candidate',
-                                                style: const TextStyle(
+                                              const Text(
+                                                'Add New Candidate',
+                                                style: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -321,7 +318,7 @@ class _CandidateSectionState extends State<CandidateSection> {
                                                     controller: _positionTxt,
                                                     onChanged: (val) =>
                                                         _searchPosition(
-                                                            val, setState),
+                                                            val, newState),
                                                     validator: (value) {
                                                       if (value == null) {
                                                         return 'Tidak boleh kosong';
@@ -432,7 +429,7 @@ class _CandidateSectionState extends State<CandidateSection> {
                                                                 kGrey2),
                                                         onPressed: () {
                                                           clearTextController();
-                                                          context.pop();
+                                                          ctx.pop();
                                                         },
                                                         child: const Text(
                                                           'Cancel',
@@ -484,10 +481,7 @@ class _CandidateSectionState extends State<CandidateSection> {
                                                             if (successAddCandidate ==
                                                                 true) {
                                                               clearTextController();
-                                                              Future.delayed(
-                                                                  Duration.zero,
-                                                                  () => context
-                                                                      .pop());
+                                                              ctx.pop();
                                                               setState(() {
                                                                 isLoadingPage =
                                                                     true;
@@ -528,9 +522,9 @@ class _CandidateSectionState extends State<CandidateSection> {
                                           if (_constainsPosition.isNotEmpty &&
                                               _position.isEmpty)
                                             Positioned(
-                                              bottom: 30,
+                                              bottom: 79,
                                               child: Container(
-                                                height: 200,
+                                                height: 160,
                                                 width: 450,
                                                 decoration: BoxDecoration(
                                                   color: Colors.white,
@@ -544,7 +538,7 @@ class _CandidateSectionState extends State<CandidateSection> {
                                                       (context, index) =>
                                                           InkWell(
                                                     onTap: () {
-                                                      setState(() {
+                                                      newState(() {
                                                         _position =
                                                             _constainsPosition[
                                                                 index];
@@ -552,9 +546,21 @@ class _CandidateSectionState extends State<CandidateSection> {
                                                             _position;
                                                       });
                                                     },
-                                                    child: Text(
-                                                        _constainsPosition[
-                                                            index]),
+                                                    child: Container(
+                                                      decoration: const BoxDecoration(
+                                                          color: kGrey1,
+                                                          border: Border(
+                                                              bottom: BorderSide(
+                                                                  width: 0.5,
+                                                                  color:
+                                                                      kGrey3))),
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          vertical: 5),
+                                                      child: Text(
+                                                          _constainsPosition[
+                                                              index]),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -685,13 +691,14 @@ class _CandidateSectionState extends State<CandidateSection> {
                                   )),
                               Expanded(
                                 child: TextButton(
-                                  onPressed: () => copiedToClipboard(i),
-                                  //  async {
-                                  // context.goNamed('preparation',
-                                  //     pathParameters: {
-                                  //       'prepId': listUser![i].id
-                                  //     });
-                                  // },
+                                  onPressed: ()
+                                      // => copiedToClipboard(i),
+                                      async {
+                                    context.goNamed('preparation',
+                                        pathParameters: {
+                                          'prepId': listUser![i].id
+                                        });
+                                  },
                                   child: Text(
                                     listUser![i].link,
                                     style: const TextStyle(
