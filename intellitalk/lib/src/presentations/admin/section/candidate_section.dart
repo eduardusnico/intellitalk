@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +24,7 @@ class _CandidateSectionState extends State<CandidateSection> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameTxt = TextEditingController();
+  final TextEditingController _emailTxt = TextEditingController();
   final TextEditingController _divisionTxt = TextEditingController();
   final TextEditingController _positionTxt = TextEditingController();
   final TextEditingController _skillTxt = TextEditingController();
@@ -53,6 +52,7 @@ class _CandidateSectionState extends State<CandidateSection> {
 
   void clearTextController() {
     _nameTxt.clear();
+    _emailTxt.clear();
     _positionTxt.clear();
     _divisionTxt.clear();
     _quantityTxt.clear();
@@ -157,22 +157,35 @@ class _CandidateSectionState extends State<CandidateSection> {
                                               ),
                                             ),
                                             const SizedBox(height: 14),
-                                            // const Text(
-                                            //   'Email',
-                                            //   style: TextStyle(fontSize: 12),
-                                            // ),
-                                            // const SizedBox(height: 5),
-                                            // TextFormField(controller: ,
-                                            //   style: const TextStyle(fontSize: 12),
-                                            //   decoration: InputDecoration(
-                                            //     isDense: true,
-                                            //     border: OutlineInputBorder(
-                                            //       borderRadius:
-                                            //           BorderRadius.circular(10),
-                                            //     ),
-                                            //   ),
-                                            // ),
-                                            // const SizedBox(height: 14),
+                                            const Text(
+                                              'Email',
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            TextFormField(
+                                              controller: _emailTxt,
+                                              validator: (value) {
+                                                if (value == null) {
+                                                  return 'Tidak boleh kosong';
+                                                } else if (value.isEmpty) {
+                                                  return 'Tidak boleh kosong';
+                                                }
+                                                return null;
+                                              },
+                                              style:
+                                                  const TextStyle(fontSize: 12),
+                                              decoration: InputDecoration(
+                                                isDense: true,
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: kGrey1
+                                                          .withOpacity(0.2)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 14),
                                             const Text(
                                               'Division',
                                               style: TextStyle(fontSize: 12),
@@ -335,10 +348,8 @@ class _CandidateSectionState extends State<CandidateSection> {
                                                           await backend
                                                               .addNewCandidate(
                                                                   _nameTxt.text,
-                                                                  Random()
-                                                                      .nextInt(
-                                                                          10000)
-                                                                      .toString(),
+                                                                  _emailTxt
+                                                                      .text,
                                                                   _divisionTxt
                                                                       .text,
                                                                   _positionTxt

@@ -52,7 +52,7 @@ class _AdminScreenState extends State<AdminScreen> {
                     ),
                     const SizedBox(width: 15),
                     Text(
-                      'My Dashboard',
+                      'Candidate',
                       style: TextStyle(
                           color: kWhite,
                           fontWeight: indexSelected == 0

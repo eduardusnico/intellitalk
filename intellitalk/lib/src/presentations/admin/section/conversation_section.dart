@@ -95,7 +95,7 @@ class _ConversationSectionState extends State<ConversationSection> {
                                             : i == 3
                                                 ? 200
                                                 : i == 4
-                                                    ? 330
+                                                    ? 220
                                                     : null,
                                 child: Text(
                                   tableTitle[i],

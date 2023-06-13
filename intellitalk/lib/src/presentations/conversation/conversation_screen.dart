@@ -21,7 +21,6 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final be = Backend();
-  String header = 'intellitalk interview';
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _chatController =
       TextEditingController(text: 'Saya siap');
@@ -74,7 +73,7 @@ class _ChatScreenState extends State<ChatScreen> {
       recentMessage.add(
         OpenAIChatCompletionChoiceMessageModel(
           content:
-              "You are an interviewer from a company named Arkademi. You are doing an interview with the candidate. Candidate name is ${user!.name}. Make this interview like a conversation, ask only one question per respond. Don't give any information or answer about your question. Please ask ${user!.quantity} question about ${user!.position}. and make sure I understand ${user!.skill}. /'question/' that I mean is the total topic, not the total response. Please ask more question about that topic if you think my answer is not good enough, unless I choose to skip or don't know the answer you can jump to next question. if you have finished asking according to the number of questions I gave to you, you can finish it with /'Terima kasih sudah mengikuti sesi interview ini/'. Make sure you're not using english. Make sure I'm special than other candidates. Here's some data about Arkademi SEO Officer at Arkademi have 0 member, Flutter has 3 member. working culture at arkademi is BRAVE (Bold, Resilience, Autonomous, Velocity, and Empathy).",
+              "You are an interviewer from a company named Arkademi. You are doing an interview with the candidate. Candidate name is ${user!.name}. Make this interview like a conversation, ask only one question per respond. Don't give any information or answer about your question. Don't answer out of topic question from the candidate. Please ask ${user!.quantity} question about ${user!.position}. and make sure the candidate understand ${user!.skill}. /'question/' that I mean is the total topic, not the total response. Please ask more question about that topic if you think my answer is not good enough, unless I choose to skip or doesn't know the answer you can jump to the next question. if you have finished asking according to the number of questions I gave to you, you can finish it with /'Terima kasih sudah mengikuti sesi interview ini/'. Make sure you're not using english. Make sure I'm special than other candidates. Here's some data about Arkademi: 1. Working culture at Arkademi is BRAVE (Bold, Resilience, Autonomous, Velocity, Empathy), 2. Working hour from 9 AM to 6 PM, 3. full WFO, 4. The office location is at Jalan Mars Raya no. 15, Vila Cinere Mas, Cinere. 6. Info about current member on the position (CEO 1 member (Hilman Fajrian), Secretary 1 member, Head of Operation 1 member, Business Development manager 1 member, Product Manager 1 member, Finance Manager 1 member, Social Media Specialist 2 member, UI/UX Artist 1 member, UX Researcher 1 member, UI Designer 2 member, UX Writer 1 member, Mobile Engineer 3 member, Multimedia deputy manager 1 member, Tax accountant 2 member, Tech Manager 1 member, Tech deputy manager 1 member, Flutter Developer 3 member, Frontend Developer 4 member, Backend 3 member, Technical Writer 1 member, Developer Operation 1 member, System Admin 2 member, Academic Manager 1 member, Marketing Communication 2 member, Quality Assurance 1 member, Graphic Designer 3 member, Account Executive 5 member, Customer Relation 4 member, Learning Analyst 3 member, Learning deputy manager 1 member,  General Affair 3 member, Learning Operation 7 member, SEO Specialist 3 member, Customer Retention Lead 1 member, System Analyst 1 member, Public Relation 2 member, Instructional Designer 4 member, Office Operation Admin 1 member, Compensation and Benefit 1 member, Lead Office Operation 1 member, Data Administration 1 member, Accountant 2 member, Training and Development 1 member, People Analytic 1 member, Junior Account Executive 1 member, Senior Executive Manager 1 member, Legal and Compliance 1 member, Social Media Designer 1 member, Partnership Representative 3 member, Partnership Scout 7 member, Talent Acquisition 3 member, Video Operator 2 member, Sales Operation 1 member, Zoom Operation 24 member)",
           role: OpenAIChatMessageRole.system,
         ),
       );
@@ -99,7 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {
       if (conversations.last
           .toLowerCase()
-          .contains('terima kasih sudah mengikuti sesi interview ini')) {
+          .contains('terima kasih sudah mengikuti')) {
         isInterviewEnded = true;
         be.postConversation(conversations, user!.name, user!.id);
       }
@@ -114,18 +113,18 @@ class _ChatScreenState extends State<ChatScreen> {
           preferredSize: const Size.fromHeight(110),
           child: Container(
             alignment: Alignment.center,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            color: const Color(0xff035BA7),
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            color: kPrimaryBlue,
             height: 110,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  header.toUpperCase(),
-                  style: const TextStyle(
-                    fontSize: 28,
+                const Text(
+                  'INTELLITALK INTERVIEW',
+                  style: TextStyle(
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: kWhite,
                   ),
                 ),
                 const SizedBox(
@@ -134,8 +133,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 Text(
                   '${user?.position ?? ''} - ${user?.division.toUpperCase()}',
                   style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
+                    fontSize: 15,
+                    color: kWhite,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -170,31 +169,31 @@ class _ChatScreenState extends State<ChatScreen> {
                             margin: const EdgeInsets.only(bottom: 12),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
-                                color: const Color(0xffD8D8D8)),
+                                color: kGrey2),
                             padding: const EdgeInsets.symmetric(
                                 vertical: 14, horizontal: 10),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  'Arkademi Bot',
+                                  'Arkademi',
                                   style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: Color(0xff035BA7)),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: kPrimaryBlue,
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 5,
                                 ),
                                 Text(
-                                  'Halo ${user!.name} selamat datang di interview arkademi! sekarang kita akan mulai interview, ketik "Saya siap" jika kamu sudah siap',
-                                  textAlign: TextAlign.left,
-                                  maxLines: 4,
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xff242A37)),
-                                ),
+                                    'Halo ${user!.name} selamat datang di interview arkademi! sekarang kita akan mulai interview, ketik "Saya siap" jika kamu sudah siap',
+                                    textAlign: TextAlign.left,
+                                    maxLines: 4,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      color: kBlack,
+                                    )),
                               ],
                             ),
                           ),
@@ -212,17 +211,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                       vertical: 14, horizontal: 10),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
-                                    color: i % 2 == 0
-                                        ? Colors.blue[600]
-                                        : const Color(0xffD8D8D8),
+                                    color: i % 2 == 0 ? kSecondaryBlue : kGrey2,
                                   ),
                                   child: i % 2 == 0
                                       ? Text(
                                           conversations[i],
                                           style: TextStyle(
-                                              color: i % 2 == 0
-                                                  ? Colors.white
-                                                  : Colors.black),
+                                              color:
+                                                  i % 2 == 0 ? kWhite : kBlack),
                                           maxLines: 10,
                                           textAlign: i % 2 == 0
                                               ? TextAlign.right
@@ -233,11 +229,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             const Text(
-                                              'Arkademi Bot',
+                                              'Arkademi',
                                               style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600,
-                                                  color: Color(0xff035BA7)),
+                                                  color: kPrimaryBlue),
                                             ),
                                             const SizedBox(
                                               height: 5,
@@ -245,7 +241,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                             Text(
                                               conversations[i],
                                               style: const TextStyle(
-                                                  color: Colors.black),
+                                                  fontSize: 15, color: kBlack),
                                               maxLines: 10,
                                               textAlign: TextAlign.left,
                                             ),
@@ -269,13 +265,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   (isInterviewEnded == true || user!.status == 1))
               ? const SizedBox()
               : Container(
-                  color: const Color(0xff035BA7),
+                  color: kPrimaryBlue,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 25),
                           child: Form(
                             key: _formKey,
                             child: TextFormField(
@@ -317,7 +314,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           }
                         },
                         child: const Icon(Icons.send_rounded,
-                            size: 38, color: kWhite),
+                            size: 44, color: kSecondaryBlue),
                       ),
                       const SizedBox(width: 20)
                     ],
