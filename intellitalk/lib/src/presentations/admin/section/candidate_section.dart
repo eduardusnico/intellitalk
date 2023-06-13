@@ -32,6 +32,66 @@ class _CandidateSectionState extends State<CandidateSection> {
   //
   bool isLoadingPage = true;
   List<User>? listUser;
+  String _position = '';
+  final List<String> _constainsPosition = [];
+  final List<String> _listPosition = [
+    'CEO',
+    'CTO',
+    'COO',
+    'Secretary',
+    'Head of Operation',
+    'Business Development Manager',
+    'Product Manager',
+    'Finance Manager',
+    'Social Media Specialist',
+    'UI/UX Artist',
+    'UX Researcher',
+    'UI Designer',
+    'UX Writer',
+    'Mobile Engineer',
+    'Multimedia Deputy Manager',
+    'Tax Accountant',
+    'Tech Manager',
+    'Tech Deputy Manager',
+    'Flutter Developer',
+    'Frontend Developer',
+    'Backend',
+    'Technical Writer',
+    'Developer Operation',
+    'System Administrator',
+    'Academic Manager',
+    'Marketing Communication',
+    'Quality Assurance',
+    'Graphic Designer',
+    'Account Executive',
+    'Customer Relation',
+    'Learning Analyst',
+    'Learning Deputy Manager',
+    'General Affair',
+    'Learning Operation',
+    'SEO Specialist',
+    'Customer Retention Lead',
+    'System Analyst',
+    'Public Relation',
+    'Instructional Designer',
+    'Office Operation Administrator',
+    'Compensation and Benefit',
+    'Lead Office Operation',
+    'Data Administrator',
+    'Accountant',
+    'Training and Development',
+    'People Analytic',
+    'Junior Account Executive',
+    'Senior Executive Manager',
+    'Legal and Compliance',
+    'Creative Designer',
+    'Partnership Representative',
+    'Partnership Scout',
+    'Talent Acquisition',
+    'Video Operator',
+    'Sales Operation',
+    'Zoom Operation',
+  ];
   //
   final backend = Backend();
 
@@ -57,6 +117,25 @@ class _CandidateSectionState extends State<CandidateSection> {
     _divisionTxt.clear();
     _quantityTxt.clear();
     _skillTxt.clear();
+  }
+
+  void _searchPosition(String text, void Function(void Function()) setState) {
+    _constainsPosition.clear();
+
+    if (text.isNotEmpty) {
+      final result = _listPosition
+          .where(
+              (element) => element.toLowerCase().contains(text.toLowerCase()))
+          .toSet()
+          .toList();
+      setState(() {
+        _constainsPosition.addAll(result);
+      });
+    } else {
+      setState(() {
+        _constainsPosition.clear();
+      });
+    }
   }
 
   void copiedToClipboard(int i) async {
@@ -97,305 +176,394 @@ class _CandidateSectionState extends State<CandidateSection> {
                           barrierDismissible: false,
                           context: context,
                           builder: (context) {
-                            return Dialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(26),
-                                ),
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.3,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 28, horizontal: 38),
-                                  child: Form(
-                                    key: _formKey,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Text(
-                                          'Add New Candidate',
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        const Text(
-                                          'Fill the form below to add new candidate',
-                                          style: TextStyle(fontSize: 12),
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const SizedBox(height: 20),
-                                            const Text(
-                                              'Name',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            TextFormField(
-                                              controller: _nameTxt,
-                                              validator: (value) {
-                                                if (value == null) {
-                                                  return 'Tidak boleh kosong';
-                                                } else if (value.isEmpty) {
-                                                  return 'Tidak boleh kosong';
-                                                }
-                                                return null;
-                                              },
-                                              style:
-                                                  const TextStyle(fontSize: 12),
-                                              decoration: InputDecoration(
-                                                isDense: true,
-                                                border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: kGrey1
-                                                          .withOpacity(0.2)),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 14),
-                                            const Text(
-                                              'Email',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            TextFormField(
-                                              controller: _emailTxt,
-                                              validator: (value) {
-                                                if (value == null) {
-                                                  return 'Tidak boleh kosong';
-                                                } else if (value.isEmpty) {
-                                                  return 'Tidak boleh kosong';
-                                                }
-                                                return null;
-                                              },
-                                              style:
-                                                  const TextStyle(fontSize: 12),
-                                              decoration: InputDecoration(
-                                                isDense: true,
-                                                border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: kGrey1
-                                                          .withOpacity(0.2)),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 14),
-                                            const Text(
-                                              'Division',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            TextFormField(
-                                              controller: _divisionTxt,
-                                              validator: (value) {
-                                                if (value == null) {
-                                                  return 'Tidak boleh kosong';
-                                                } else if (value.isEmpty) {
-                                                  return 'Tidak boleh kosong';
-                                                }
-                                                return null;
-                                              },
-                                              style:
-                                                  const TextStyle(fontSize: 12),
-                                              decoration: InputDecoration(
-                                                isDense: true,
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 14),
-                                            const Text(
-                                              'Position',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            TextFormField(
-                                              controller: _positionTxt,
-                                              validator: (value) {
-                                                if (value == null) {
-                                                  return 'Tidak boleh kosong';
-                                                } else if (value.isEmpty) {
-                                                  return 'Tidak boleh kosong';
-                                                }
-                                                return null;
-                                              },
-                                              style:
-                                                  const TextStyle(fontSize: 12),
-                                              decoration: InputDecoration(
-                                                isDense: true,
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 14),
-                                            const Text(
-                                              'User Requirement',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            TextFormField(
-                                              controller: _skillTxt,
-                                              validator: (value) {
-                                                if (value == null) {
-                                                  return 'Tidak boleh kosong';
-                                                } else if (value.isEmpty) {
-                                                  return 'Tidak boleh kosong';
-                                                }
-                                                return null;
-                                              },
-                                              style:
-                                                  const TextStyle(fontSize: 12),
-                                              decoration: InputDecoration(
-                                                isDense: true,
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 14),
-                                            const Text(
-                                              'Total Question Asked (minimal)',
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            TextFormField(
-                                              controller: _quantityTxt,
-                                              validator: (value) {
-                                                if (value == null) {
-                                                  return 'Tidak boleh kosong';
-                                                } else if (value.isEmpty) {
-                                                  return 'Tidak boleh kosong';
-                                                } else if (int.tryParse(
-                                                        value) ==
-                                                    null) {
-                                                  return 'Harap masukkan hanya angka';
-                                                }
-                                                return null;
-                                              },
-                                              style:
-                                                  const TextStyle(fontSize: 12),
-                                              decoration: InputDecoration(
-                                                isDense: true,
-                                                border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(height: 44),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              children: [
-                                                ElevatedButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                      elevation: 2,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10)),
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 24,
-                                                          horizontal: 34),
-                                                      backgroundColor: kGrey2),
-                                                  onPressed: () {
-                                                    clearTextController();
-                                                    context.pop();
-                                                  },
-                                                  child: const Text(
-                                                    'Cancel',
-                                                    style: TextStyle(
-                                                        color: kGrey3,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 14),
-                                                  ),
-                                                ),
-                                                ElevatedButton(
-                                                  style: ElevatedButton.styleFrom(
-                                                      elevation: 2,
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10)),
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 24,
-                                                          horizontal: 34),
-                                                      backgroundColor:
-                                                          kPrimaryBlue),
-                                                  onPressed: () async {
-                                                    if (_formKey.currentState!
-                                                            .validate() ==
-                                                        true) {
-                                                      final successAddCandidate =
-                                                          await backend
-                                                              .addNewCandidate(
-                                                                  _nameTxt.text,
-                                                                  _emailTxt
-                                                                      .text,
-                                                                  _divisionTxt
-                                                                      .text,
-                                                                  _positionTxt
-                                                                      .text,
-                                                                  _skillTxt
-                                                                      .text,
-                                                                  int.parse(
-                                                                      _quantityTxt
-                                                                          .text));
-                                                      if (successAddCandidate ==
-                                                          true) {
-                                                        clearTextController();
-                                                        context.pop();
-                                                        setState(() {
-                                                          isLoadingPage = true;
-                                                        });
-
-                                                        listUser = await backend
-                                                            .fetchAllUser();
-                                                        Future.delayed(
-                                                            const Duration(
-                                                                seconds: 2),
-                                                            () => setState(() {
-                                                                  isLoadingPage =
-                                                                      false;
-                                                                }));
-                                                      }
-                                                    }
-                                                  },
-                                                  child: const Text(
-                                                    'Save',
-                                                    style: TextStyle(
-                                                        color: kWhite,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 14),
-                                                  ),
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                            return StatefulBuilder(
+                                builder: (context, setState) {
+                              return Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(26),
                                   ),
-                                ));
+                                  child: Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.3,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 28, horizontal: 38),
+                                    child: Form(
+                                      key: _formKey,
+                                      child: Stack(
+                                        children: [
+                                          Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                _constainsPosition.isNotEmpty
+                                                    ? 'diganti'
+                                                    : 'Add New Candidate',
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 5),
+                                              const Text(
+                                                'Fill the form below to add new candidate',
+                                                style: TextStyle(fontSize: 12),
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const SizedBox(height: 20),
+                                                  const Text(
+                                                    'Name',
+                                                    style:
+                                                        TextStyle(fontSize: 12),
+                                                  ),
+                                                  const SizedBox(height: 5),
+                                                  TextFormField(
+                                                    controller: _nameTxt,
+                                                    validator: (value) {
+                                                      if (value == null) {
+                                                        return 'Tidak boleh kosong';
+                                                      } else if (value
+                                                          .isEmpty) {
+                                                        return 'Tidak boleh kosong';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    style: const TextStyle(
+                                                        fontSize: 12),
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: kGrey1
+                                                                .withOpacity(
+                                                                    0.2)),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 14),
+                                                  const Text(
+                                                    'Email',
+                                                    style:
+                                                        TextStyle(fontSize: 12),
+                                                  ),
+                                                  const SizedBox(height: 5),
+                                                  TextFormField(
+                                                    controller: _emailTxt,
+                                                    validator: (value) {
+                                                      if (value == null) {
+                                                        return 'Tidak boleh kosong';
+                                                      } else if (value
+                                                          .isEmpty) {
+                                                        return 'Tidak boleh kosong';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    style: const TextStyle(
+                                                        fontSize: 12),
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: kGrey1
+                                                                .withOpacity(
+                                                                    0.2)),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 14),
+                                                  const Text(
+                                                    'Division',
+                                                    style:
+                                                        TextStyle(fontSize: 12),
+                                                  ),
+                                                  const SizedBox(height: 5),
+                                                  TextFormField(
+                                                    controller: _divisionTxt,
+                                                    validator: (value) {
+                                                      if (value == null) {
+                                                        return 'Tidak boleh kosong';
+                                                      } else if (value
+                                                          .isEmpty) {
+                                                        return 'Tidak boleh kosong';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    style: const TextStyle(
+                                                        fontSize: 12),
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 14),
+                                                  const Text(
+                                                    'Position',
+                                                    style:
+                                                        TextStyle(fontSize: 12),
+                                                  ),
+                                                  const SizedBox(height: 5),
+                                                  TextFormField(
+                                                    controller: _positionTxt,
+                                                    onChanged: (val) =>
+                                                        _searchPosition(
+                                                            val, setState),
+                                                    validator: (value) {
+                                                      if (value == null) {
+                                                        return 'Tidak boleh kosong';
+                                                      } else if (value
+                                                          .isEmpty) {
+                                                        return 'Tidak boleh kosong';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    style: const TextStyle(
+                                                        fontSize: 12),
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 14),
+                                                  const Text(
+                                                    'User Requirement',
+                                                    style:
+                                                        TextStyle(fontSize: 12),
+                                                  ),
+                                                  const SizedBox(height: 5),
+                                                  TextFormField(
+                                                    controller: _skillTxt,
+                                                    validator: (value) {
+                                                      if (value == null) {
+                                                        return 'Tidak boleh kosong';
+                                                      } else if (value
+                                                          .isEmpty) {
+                                                        return 'Tidak boleh kosong';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    style: const TextStyle(
+                                                        fontSize: 12),
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 14),
+                                                  const Text(
+                                                    'Total Question Asked (minimal)',
+                                                    style:
+                                                        TextStyle(fontSize: 12),
+                                                  ),
+                                                  const SizedBox(height: 5),
+                                                  TextFormField(
+                                                    controller: _quantityTxt,
+                                                    validator: (value) {
+                                                      if (value == null) {
+                                                        return 'Tidak boleh kosong';
+                                                      } else if (value
+                                                          .isEmpty) {
+                                                        return 'Tidak boleh kosong';
+                                                      } else if (int.tryParse(
+                                                              value) ==
+                                                          null) {
+                                                        return 'Harap masukkan hanya angka';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    style: const TextStyle(
+                                                        fontSize: 12),
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 44),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      ElevatedButton(
+                                                        style: ElevatedButton.styleFrom(
+                                                            elevation: 2,
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        24,
+                                                                    horizontal:
+                                                                        34),
+                                                            backgroundColor:
+                                                                kGrey2),
+                                                        onPressed: () {
+                                                          clearTextController();
+                                                          context.pop();
+                                                        },
+                                                        child: const Text(
+                                                          'Cancel',
+                                                          style: TextStyle(
+                                                              color: kGrey3,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 14),
+                                                        ),
+                                                      ),
+                                                      ElevatedButton(
+                                                        style: ElevatedButton.styleFrom(
+                                                            elevation: 2,
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10)),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        24,
+                                                                    horizontal:
+                                                                        34),
+                                                            backgroundColor:
+                                                                kPrimaryBlue),
+                                                        onPressed: () async {
+                                                          if (_formKey
+                                                                  .currentState!
+                                                                  .validate() ==
+                                                              true) {
+                                                            final successAddCandidate =
+                                                                await backend.addNewCandidate(
+                                                                    _nameTxt
+                                                                        .text,
+                                                                    _emailTxt
+                                                                        .text,
+                                                                    _divisionTxt
+                                                                        .text,
+                                                                    _positionTxt
+                                                                        .text,
+                                                                    _skillTxt
+                                                                        .text,
+                                                                    int.parse(
+                                                                        _quantityTxt
+                                                                            .text));
+                                                            if (successAddCandidate ==
+                                                                true) {
+                                                              clearTextController();
+                                                              Future.delayed(
+                                                                  Duration.zero,
+                                                                  () => context
+                                                                      .pop());
+                                                              setState(() {
+                                                                isLoadingPage =
+                                                                    true;
+                                                              });
+
+                                                              listUser =
+                                                                  await backend
+                                                                      .fetchAllUser();
+                                                              Future.delayed(
+                                                                  const Duration(
+                                                                      seconds:
+                                                                          2),
+                                                                  () =>
+                                                                      setState(
+                                                                          () {
+                                                                        isLoadingPage =
+                                                                            false;
+                                                                      }));
+                                                            }
+                                                          }
+                                                        },
+                                                        child: const Text(
+                                                          'Save',
+                                                          style: TextStyle(
+                                                              color: kWhite,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600,
+                                                              fontSize: 14),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          if (_constainsPosition.isNotEmpty &&
+                                              _position.isEmpty)
+                                            Positioned(
+                                              bottom: 30,
+                                              child: Container(
+                                                height: 200,
+                                                width: 450,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                child: ListView.builder(
+                                                  itemCount:
+                                                      _constainsPosition.length,
+                                                  itemBuilder:
+                                                      (context, index) =>
+                                                          InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        _position =
+                                                            _constainsPosition[
+                                                                index];
+                                                        _positionTxt.text =
+                                                            _position;
+                                                      });
+                                                    },
+                                                    child: Text(
+                                                        _constainsPosition[
+                                                            index]),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                    ),
+                                  ));
+                            });
                           },
                         );
                       },
