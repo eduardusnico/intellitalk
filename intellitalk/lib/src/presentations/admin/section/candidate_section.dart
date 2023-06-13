@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intellitalk/constants.dart';
 import 'package:intellitalk/src/data/dataproviders/backend.dart';
@@ -56,6 +57,17 @@ class _CandidateSectionState extends State<CandidateSection> {
     _divisionTxt.clear();
     _quantityTxt.clear();
     _skillTxt.clear();
+  }
+
+  void copiedToClipboard(int i) async {
+    final users = listUser ?? [];
+    if (users.isEmpty) return;
+    await Clipboard.setData(ClipboardData(text: listUser![i].link));
+    Future.delayed(
+      Duration.zero,
+      () => ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Link berhasil disalin!'))),
+    );
   }
 
   @override
@@ -494,12 +506,13 @@ class _CandidateSectionState extends State<CandidateSection> {
                                   )),
                               Expanded(
                                 child: TextButton(
-                                  onPressed: () {
-                                    context.goNamed('preparation',
-                                        pathParameters: {
-                                          'prepId': listUser![i].id
-                                        });
-                                  },
+                                  onPressed: () => copiedToClipboard(i),
+                                  //  async {
+                                  // context.goNamed('preparation',
+                                  //     pathParameters: {
+                                  //       'prepId': listUser![i].id
+                                  //     });
+                                  // },
                                   child: Text(
                                     listUser![i].link,
                                     style: const TextStyle(
