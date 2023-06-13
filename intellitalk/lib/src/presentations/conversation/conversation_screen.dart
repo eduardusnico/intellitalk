@@ -111,35 +111,35 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(150),
-          child: SafeArea(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 32),
-              color: const Color(0xff035BA7),
-              height: 150,
-              child: Column(
-                children: [
-                  Text(
-                    header.toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+          preferredSize: const Size.fromHeight(110),
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            color: const Color(0xff035BA7),
+            height: 110,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  header.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  const SizedBox(
-                    height: 20,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  '${user?.position ?? ''} - ${user?.division.toUpperCase()}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
                   ),
-                  Text(
-                    '${user?.position ?? ''} - ${user?.division.toUpperCase()}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           )),
       body: isLoadingPage == true
@@ -275,8 +275,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     children: [
                       Expanded(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 30),
+                          padding: const EdgeInsets.all(20),
                           child: Form(
                             key: _formKey,
                             child: TextFormField(
@@ -310,18 +309,15 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        child: InkWell(
-                          onTap: () {
-                            if (_formKey.currentState!.validate() == true) {
-                              askGpt(_chatController.text);
-                            }
-                          },
-                          child: const Icon(Icons.send_rounded,
-                              size: 33, color: kWhite),
-                        ),
+                      // const SizedBox(width: 10),
+                      InkWell(
+                        onTap: () {
+                          if (_formKey.currentState!.validate() == true) {
+                            askGpt(_chatController.text);
+                          }
+                        },
+                        child: const Icon(Icons.send_rounded,
+                            size: 38, color: kWhite),
                       ),
                       const SizedBox(width: 20)
                     ],
