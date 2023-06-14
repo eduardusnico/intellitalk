@@ -104,8 +104,27 @@ class _ChatScreenState extends State<ChatScreen> {
     recentMessage.add(chatCompletion.choices.last.message);
     setState(() {
       if (conversations.last
-          .toLowerCase()
-          .contains('terima kasih sudah mengikuti')) {
+              .toLowerCase()
+              .contains('terima kasih sudah mengikuti') ||
+          conversations.last
+              .toLowerCase()
+              .contains('terima kasih sudah berpartisipasi') ||
+          conversations.last
+              .toLowerCase()
+              .contains('terima kasih telah mengikuti') ||
+          conversations.last
+              .toLowerCase()
+              .contains('semoga harimu menyenangkan') ||
+          conversations.last
+              .toLowerCase()
+              .contains('semoga hari anda menyenangkan') ||
+          conversations.last
+              .toLowerCase()
+              .contains('semoga hari kamu menyenangkan') ||
+          conversations.last.toLowerCase().contains('selamat tinggal') ||
+          conversations.last
+              .toLowerCase()
+              .contains('terima kasih telah berpartisipasi')) {
         isInterviewEnded = true;
         be
             .postConversation(conversations, user!.name, user!.id)
