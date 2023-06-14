@@ -82,7 +82,6 @@ class Backend {
       final response = await http.post(Uri.parse('$baseUrl/api/v1/users'),
           body: json.encode(body));
       final data = json.decode(response.body);
-      print(data);
       if (data['status'] == true) {
         return true;
       }

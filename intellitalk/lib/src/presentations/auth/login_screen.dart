@@ -11,11 +11,19 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late FocusNode passwordFocus;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    passwordFocus = FocusNode();
     asyncFunction();
+  }
+
+  @override
+  void dispose() {
+    passwordFocus.dispose();
+    super.dispose();
   }
 
   void asyncFunction() async {
@@ -86,6 +94,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: TextFormField(
+                    onFieldSubmitted: (value) {
+                      passwordFocus.requestFocus();
+                    },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Field tidak boleh kosong';
@@ -111,6 +122,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.25,
                   child: TextFormField(
+                    focusNode: passwordFocus,
+                    onFieldSubmitted: (value) async {
+                      if (_formKey.currentState!.validate() == true) {
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs
+                            .setBool('isLogin', true)
+                            .then((value) => context.goNamed('admin'));
+                      }
+                    },
                     obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -140,7 +160,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () async {
                       if (_formKey.currentState!.validate() == true) {
                         final prefs = await SharedPreferences.getInstance();
-                        print('set prefs is login');
                         await prefs
                             .setBool('isLogin', true)
                             .then((value) => context.goNamed('admin'));

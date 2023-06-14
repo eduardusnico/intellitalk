@@ -23,12 +23,12 @@ class _CandidateSectionState extends State<CandidateSection> {
   ];
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameTxt = TextEditingController();
-  final TextEditingController _emailTxt = TextEditingController();
-  final TextEditingController _divisionTxt = TextEditingController();
-  final TextEditingController _positionTxt = TextEditingController();
-  final TextEditingController _skillTxt = TextEditingController();
-  final TextEditingController _quantityTxt = TextEditingController();
+  late TextEditingController _nameTxt;
+  late TextEditingController _emailTxt;
+  late TextEditingController _divisionTxt;
+  late TextEditingController _positionTxt;
+  late TextEditingController _skillTxt;
+  late TextEditingController _quantityTxt;
   //
   bool isLoadingPage = true;
   List<User>? listUser;
@@ -98,7 +98,24 @@ class _CandidateSectionState extends State<CandidateSection> {
   @override
   void initState() {
     super.initState();
+    _nameTxt = TextEditingController();
+    _emailTxt = TextEditingController();
+    _divisionTxt = TextEditingController();
+    _positionTxt = TextEditingController();
+    _skillTxt = TextEditingController();
+    _quantityTxt = TextEditingController();
     asyncFunction();
+  }
+
+  @override
+  void dispose() {
+    _nameTxt.dispose();
+    _emailTxt.dispose();
+    _divisionTxt.dispose();
+    _positionTxt.dispose();
+    _skillTxt.dispose();
+    _quantityTxt.dispose();
+    super.dispose();
   }
 
   void asyncFunction() async {
@@ -691,14 +708,13 @@ class _CandidateSectionState extends State<CandidateSection> {
                                   )),
                               Expanded(
                                 child: TextButton(
-                                  onPressed: ()
-                                      // => copiedToClipboard(i),
-                                      async {
-                                    context.goNamed('preparation',
-                                        pathParameters: {
-                                          'prepId': listUser![i].id
-                                        });
-                                  },
+                                  onPressed: () => copiedToClipboard(i),
+                                  //   async {
+                                  // context.goNamed('conversation',
+                                  //     pathParameters: {
+                                  //       'convoId': listUser![i].id
+                                  //     });
+                                  // },
                                   child: Text(
                                     listUser![i].link,
                                     style: const TextStyle(

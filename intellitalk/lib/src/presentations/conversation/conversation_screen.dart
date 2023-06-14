@@ -1,5 +1,6 @@
 import 'package:dart_openai/openai.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intellitalk/constants.dart';
 import 'package:intellitalk/src/data/dataproviders/backend.dart';
 import 'package:intellitalk/src/data/models/user_m.dart';
@@ -22,8 +23,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final be = Backend();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _chatController =
-      TextEditingController(text: 'Saya siap');
+  late TextEditingController _chatController;
   bool isLoadingPage = true;
   bool firstTry = true;
   bool isLoadingResponse = false;
@@ -43,19 +43,14 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    _chatController = TextEditingController(text: 'Saya siap');
     asynFuct();
-
-    // window.history.pushState(null, '', window.location.href);
-    // window.addEventListener('popstate', (event) {
-    //   event.preventDefault();
-    //   event.stopPropagation();
-    //   return window.history.go(1);
-    // });
   }
 
   @override
   void dispose() {
     super.dispose();
+    _chatController.dispose();
     // widget.recorder.stop();
   }
 
@@ -66,52 +61,6 @@ class _ChatScreenState extends State<ChatScreen> {
         isLoadingPage = false;
       });
     }
-    // if (user != null) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     showDialog(
-    //         context: context,
-    //         barrierDismissible: false,
-    //         barrierColor: kPrimaryBlue,
-    //         builder: (context) {
-    //           return Dialog(
-    //               shape: RoundedRectangleBorder(
-    //                 borderRadius: BorderRadius.circular(26),
-    //               ),
-    //               child: Container(
-    //                 width: MediaQuery.of(context).size.width * 0.3,
-    //                 padding: const EdgeInsets.symmetric(
-    //                     vertical: 28, horizontal: 38),
-    //                 child: Column(
-    //                   mainAxisSize: MainAxisSize.min,
-    //                   children: [
-    //                     Text(
-    //                       "Halo, ${user?.name}",
-    //                       style: const TextStyle(
-    //                         fontSize: 24,
-    //                         fontWeight: FontWeight.bold,
-    //                       ),
-    //                     ),
-    //                     const SizedBox(height: 20),
-    //                     const Text(
-    //                       'We will let you know when the results are out',
-    //                       textAlign: TextAlign.center,
-    //                       style: TextStyle(
-    //                           fontSize: 15.5, fontWeight: FontWeight.w500),
-    //                     ),
-    //                     ElevatedButton(
-    //                         onPressed: () {
-    //                           context.pop();
-    //                           setState(() {
-    //                             _isShowDialog = true;
-    //                           });
-    //                         },
-    //                         child: const Text('Les go!'))
-    //                   ],
-    //                 ),
-    //               ));
-    //         });
-    //   });
-    // }
   }
 
   void askGpt(String question) async {
@@ -119,12 +68,19 @@ class _ChatScreenState extends State<ChatScreen> {
       conversations.add(_chatController.text);
       _chatController.clear();
       isLoadingResponse = true;
+      if (_chatScrollController.position.viewportDimension > 460) {
+        _chatScrollController.animateTo(
+            _chatScrollController.position.maxScrollExtent + 100.0,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.linear);
+      }
     });
+
     if (firstTry == true) {
       recentMessage.add(
         OpenAIChatCompletionChoiceMessageModel(
           content:
-              "You are an interviewer from a company named Arkademi. You are doing an interview with the candidate. Candidate name is ${user!.name}. Make this interview like a conversation, ask only one question per respond. Don't give any information or answer about your question. Don't answer out of topic question from the candidate. Please ask ${user!.quantity} question about ${user!.position}. and make sure the candidate understand ${user!.skill}. /'question/' that I mean is the total topic, not the total response. Please ask more question about that topic if you think candidate answer is not good enough, unless the candidate choose to skip or doesn't know the answer you can jump to the next question. if you have finished asking according to the number of questions I gave to you, you can finish it with /'Terima kasih sudah mengikuti sesi interview ini/'. Make sure you're not using english. Make sure I'm special than other candidates. Here's some data about Arkademi: 1. Working culture at Arkademi is BRAVE (Bold, Resilience, Autonomous, Velocity, Empathy), 2. Working hour from 9 AM to 6 PM, 3. full WFO, 4. The office location is at Jalan Mars Raya no. 15, Vila Cinere Mas, Cinere. 6. Info about current member on the position (CEO 1 member (Hilman Fajrian), Secretary 1 member, Head of Operation 1 member, Business Development manager 1 member, Product Manager 1 member, Finance Manager 1 member, Social Media Specialist 2 member, UI/UX Artist 1 member, UX Researcher 1 member, UI Designer 2 member, UX Writer 1 member, Mobile Engineer 3 member, Multimedia deputy manager 1 member, Tax accountant 2 member, Tech Manager 1 member, Tech deputy manager 1 member, Flutter Developer 3 member, Frontend Developer 4 member, Backend 3 member, Technical Writer 1 member, Developer Operation 1 member, System Admin 2 member, Academic Manager 1 member, Marketing Communication 2 member, Quality Assurance 1 member, Graphic Designer 3 member, Account Executive 5 member, Customer Relation 4 member, Learning Analyst 3 member, Learning deputy manager 1 member,  General Affair 3 member, Learning Operation 7 member, SEO Specialist 3 member, Customer Retention Lead 1 member, System Analyst 1 member, Public Relation 2 member, Instructional Designer 4 member, Office Operation Admin 1 member, Compensation and Benefit 1 member, Lead Office Operation 1 member, Data Administration 1 member, Accountant 2 member, Training and Development 1 member, People Analytic 1 member, Junior Account Executive 1 member, Senior Executive Manager 1 member, Legal and Compliance 1 member, Social Media Designer 1 member, Partnership Representative 3 member, Partnership Scout 7 member, Talent Acquisition 3 member, Video Operator 2 member, Sales Operation 1 member, Zoom Operation 24 member)",
+              "You are an interviewer. You are doing an interview with the candidate. Candidate name is ${user!.name}. Make this interview like a conversation, ask only one question per respond. Don't give any information or answer about your question. Don't answer out of topic question from the candidate. Please ask ${user!.quantity} question about ${user!.position}. and make sure the candidate understand ${user!.skill}. /'question/' that I mean is the total topic, not the total response. Please ask more question about that topic if you think candidate answer is not good enough, unless the candidate choose to skip or doesn't know the answer you can jump to the next question. if you have finished asking according to the number of questions I gave to you, you can finish it with /'Terima kasih sudah mengikuti sesi interview ini/'. Make sure you're not using english. Make sure I'm special than other candidates. Here's some data about Arkademi: 1. Working culture at Arkademi is BRAVE (Bold, Resilience, Autonomous, Velocity, Empathy), 2. Working hour from 9 AM to 6 PM, 3. full WFO, 4. The office location is at Jalan Mars Raya no. 15, Vila Cinere Mas, Cinere. 6. Info about current member on the position (CEO 1 member (Hilman Fajrian), Secretary 1 member, Head of Operation 1 member, Business Development manager 1 member, Product Manager 1 member, Finance Manager 1 member, Social Media Specialist 2 member, UI/UX Artist 1 member, UX Researcher 1 member, UI Designer 2 member, UX Writer 1 member, Mobile Engineer 3 member, Multimedia deputy manager 1 member, Tax accountant 2 member, Tech Manager 1 member, Tech deputy manager 1 member, Flutter Developer 3 member, Frontend Developer 4 member, Backend 3 member, Technical Writer 1 member, Developer Operation 1 member, System Admin 2 member, Academic Manager 1 member, Marketing Communication 2 member, Quality Assurance 1 member, Graphic Designer 3 member, Account Executive 5 member, Customer Relation 4 member, Learning Analyst 3 member, Learning deputy manager 1 member,  General Affair 3 member, Learning Operation 7 member, SEO Specialist 3 member, Customer Retention Lead 1 member, System Analyst 1 member, Public Relation 2 member, Instructional Designer 4 member, Office Operation Admin 1 member, Compensation and Benefit 1 member, Lead Office Operation 1 member, Data Administration 1 member, Accountant 2 member, Training and Development 1 member, People Analytic 1 member, Junior Account Executive 1 member, Senior Executive Manager 1 member, Legal and Compliance 1 member, Social Media Designer 1 member, Partnership Representative 3 member, Partnership Scout 7 member, Talent Acquisition 3 member, Video Operator 2 member, Sales Operation 1 member, Zoom Operation 24 member)",
           role: OpenAIChatMessageRole.system,
         ),
       );
@@ -167,25 +123,46 @@ class _ChatScreenState extends State<ChatScreen> {
                             vertical: 28, horizontal: 38),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               "Thank You",
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 20),
-                            Text(
+                            const SizedBox(height: 20),
+                            const Text(
                               'We will let you know when the results are out',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   fontSize: 15.5, fontWeight: FontWeight.w500),
                             ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: kPrimaryBlue,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20, horizontal: 30),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8))),
+                                onPressed: () {
+                                  context.pop();
+                                },
+                                child: const Text('Ok'))
                           ],
                         ),
                       ));
                 }));
+      }
+      if (_chatScrollController.position.viewportDimension > 460) {
+        _chatScrollController.animateTo(
+            _chatScrollController.position.maxScrollExtent + 80.0,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.linear);
       }
 
       isLoadingResponse = false;
@@ -365,92 +342,109 @@ class _ChatScreenState extends State<ChatScreen> {
                                 )
                               : Container(
                                   margin: const EdgeInsets.only(right: 40),
-                                  child: isInterviewEnded == true ||
-                                          user!.status == 1 ||
-                                          _isShowDialog == false
-                                      ? const SizedBox(
-                                          width: 90,
-                                        )
-                                      : SlideCountdownSeparated(
-                                          textStyle: const TextStyle(
-                                              color: kWhite,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17),
-                                          decoration: const BoxDecoration(),
-                                          separatorStyle: const TextStyle(
-                                              color: kWhite,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17),
-                                          onDone: () async {
-                                            setState(() {
-                                              isInterviewEnded = true;
-                                            });
-                                            be
-                                                .postConversation(conversations,
-                                                    user!.name, user!.id)
-                                                .then((value) => showDialog(
-                                                    context: context,
-                                                    barrierDismissible: false,
-                                                    builder: (context) {
-                                                      return Dialog(
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        26),
-                                                          ),
-                                                          child: Container(
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                0.3,
-                                                            padding:
-                                                                const EdgeInsets
+                                  child:
+                                      isInterviewEnded == true ||
+                                              user!.status == 1 ||
+                                              _isShowDialog == false
+                                          ? const SizedBox(
+                                              width: 90,
+                                            )
+                                          : SlideCountdownSeparated(
+                                              textStyle: const TextStyle(
+                                                  color: kWhite,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 17),
+                                              decoration: const BoxDecoration(),
+                                              separatorStyle: const TextStyle(
+                                                  color: kWhite,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 17),
+                                              onDone: () async {
+                                                setState(() {
+                                                  isInterviewEnded = true;
+                                                });
+                                                be
+                                                    .postConversation(
+                                                        conversations,
+                                                        user!.name,
+                                                        user!.id)
+                                                    .then((value) => showDialog(
+                                                        context: context,
+                                                        barrierDismissible:
+                                                            false,
+                                                        builder: (context) {
+                                                          return Dialog(
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            26),
+                                                              ),
+                                                              child: Container(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.3,
+                                                                padding: const EdgeInsets
                                                                         .symmetric(
                                                                     vertical:
                                                                         28,
                                                                     horizontal:
                                                                         38),
-                                                            child: Column(
-                                                              mainAxisSize:
-                                                                  MainAxisSize
-                                                                      .min,
-                                                              children: const [
-                                                                Text(
-                                                                  "Time's Up!",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        24,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
+                                                                child: Column(
+                                                                  mainAxisSize:
+                                                                      MainAxisSize
+                                                                          .min,
+                                                                  children: [
+                                                                    const Text(
+                                                                      "Time's Up!",
+                                                                      style:
+                                                                          TextStyle(
+                                                                        fontSize:
+                                                                            24,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                      ),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                        height:
+                                                                            20),
+                                                                    const Text(
+                                                                      'Thank you for participating on this interview!',
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                        height:
+                                                                            20),
+                                                                    ElevatedButton(
+                                                                        style: ElevatedButton.styleFrom(
+                                                                            backgroundColor:
+                                                                                kPrimaryBlue,
+                                                                            padding:
+                                                                                const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                                                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                                                                        onPressed: () {
+                                                                          context
+                                                                              .pop();
+                                                                        },
+                                                                        child: const Text('Ok'))
+                                                                  ],
                                                                 ),
-                                                                SizedBox(
-                                                                    height: 20),
-                                                                Text(
-                                                                  'Thank you for participating on this interview!',
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style: TextStyle(
-                                                                      fontSize:
-                                                                          16,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w500),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ));
-                                                    }));
-                                          },
-                                          duration: Duration(
-                                              minutes: user!.quantity * 3),
-                                        ),
+                                                              ));
+                                                        }));
+                                              },
+                                              duration: Duration(
+                                                  minutes: user!.quantity * 3),
+                                            ),
                                 )
                         ],
                       ),

@@ -4,9 +4,9 @@ import 'package:intellitalk/src/data/models/messages_m.dart';
 import 'package:intellitalk/src/data/models/user_m.dart';
 
 class TranscriptScreen extends StatefulWidget {
-  VoidCallback onBackPressed;
-  String selectedId;
-  TranscriptScreen(
+  final VoidCallback onBackPressed;
+  final String selectedId;
+  const TranscriptScreen(
       {super.key, required this.onBackPressed, required this.selectedId});
 
   @override
@@ -120,8 +120,7 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
                             borderRadius: BorderRadius.circular(22),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 30),
+                            padding: const EdgeInsets.all(20),
                             child: Column(
                               children: [
                                 Image.asset(
@@ -138,46 +137,64 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
                                           fontWeight: FontWeight.w600,
                                           fontSize: 16),
                                     ),
-                                    const SizedBox(height: 15),
+                                    const SizedBox(height: 12),
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
-                                      child: Row(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
                                           const Text(
-                                            'Name :',
+                                            'Name : ',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600),
                                           ),
-                                          Text(user!.name)
+                                          Text(
+                                            user!.name,
+                                            maxLines: 3,
+                                          )
                                         ],
                                       ),
                                     ),
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
-                                      child: Row(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
                                           const Text(
-                                            'Email :',
+                                            'Email : ',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600),
                                           ),
-                                          Text(user!.email)
+                                          Text(
+                                            user!.email,
+                                            maxLines: 3,
+                                          )
                                         ],
                                       ),
                                     ),
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 12),
-                                      child: Row(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
                                           const Text(
-                                            'Division :',
+                                            'Division : ',
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w600),
                                           ),
-                                          Text(user!.division)
+                                          Text(
+                                            user!.division,
+                                            maxLines: 3,
+                                          )
                                         ],
                                       ),
                                     ),
