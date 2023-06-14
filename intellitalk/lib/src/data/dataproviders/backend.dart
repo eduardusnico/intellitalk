@@ -3,8 +3,6 @@ import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 import 'package:intellitalk/constants.dart';
-import 'package:intellitalk/src/data/models/messages_m.dart';
-import 'package:intellitalk/src/data/models/resp_list_message_m.dart';
 import 'package:intellitalk/src/data/models/resp_list_user_m.dart';
 import 'package:intellitalk/src/data/models/user_m.dart';
 import 'package:intellitalk/src/data/models/resp_user_m.dart';
@@ -24,20 +22,35 @@ class Backend {
     return null;
   }
 
-  Future<Messages?> fetchDetailConversationById(String id) async {
+  Future<String> fetchDetailConvoJson(String id) async {
     try {
       final response =
           await http.get(Uri.parse('$baseUrl/api/v1/conversations/$id'));
-      final data = ResponseListMessage.fromJson(response.body);
-      if (data.status == true) {
-        return data.listMessage;
+      final data = json.decode(response.body);
+      if (data['status'] == true) {
+        return response.body;
       }
-      return null;
+      return '';
     } catch (e) {
       log('$e');
+      return '';
     }
-    return null;
   }
+
+  // Future<Messages?> fetchDetailConversationById(String id) async {
+  //   try {
+  //     final response =
+  //         await http.get(Uri.parse('$baseUrl/api/v1/conversations/$id'));
+  //     final data = ResponseListMessage.fromJson(response.body);
+  //     if (data.status == true) {
+  //       return data.listMessage;
+  //     }
+  //     return null;
+  //   } catch (e) {
+  //     log('$e');
+  //   }
+  //   return null;
+  // }
 
   Future<bool> postConversation(List listConvo, String name, String id) async {
     try {

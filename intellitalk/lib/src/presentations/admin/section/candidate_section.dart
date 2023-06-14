@@ -652,7 +652,14 @@ class _CandidateSectionState extends State<CandidateSection> {
                 height: 18,
               ),
               listUser!.isEmpty
-                  ? const Text('belum ada kandidat')
+                  ? const Padding(
+                      padding: EdgeInsets.only(top: 38.0),
+                      child: Text(
+                        'Belum ada kandidat',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                    )
                   : Column(
                       children: [
                         for (int i = 0;

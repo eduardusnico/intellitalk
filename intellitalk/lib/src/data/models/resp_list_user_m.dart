@@ -30,11 +30,13 @@ class ResponseListUser {
       status: map['status'] as bool,
       statusCode: map['status_code'] as int,
       message: map['message'] as String,
-      users: List<User>.from(
-        (map['data'] as List<dynamic>).map<User>(
-          (x) => User.fromMap(x as Map<String, dynamic>),
-        ),
-      ),
+      users: map['data'] == null
+          ? []
+          : List<User>.from(
+              (map['data'] as List<dynamic>).map<User>(
+                (x) => User.fromMap(x as Map<String, dynamic>),
+              ),
+            ),
     );
   }
 
