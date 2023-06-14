@@ -1,5 +1,4 @@
 import 'package:dart_openai/openai.dart';
-import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:intellitalk/constants.dart';
 import 'package:intellitalk/src/data/dataproviders/backend.dart';
@@ -29,20 +28,29 @@ class _ChatScreenState extends State<ChatScreen> {
   bool firstTry = true;
   bool isLoadingResponse = false;
   bool isInterviewEnded = false;
+  bool _isShowDialog = false;
   List<String> conversations = [];
   List<OpenAIChatCompletionChoiceMessageModel> recentMessage = [];
   User? user;
   final ScrollController _chatScrollController = ScrollController();
+  static const List<String> instruction = [
+    'This is timed interview. Please make sure you are not interrupted during the test, as the timer cannot be paused once started.',
+    'Please ensure you have a stable internet connection',
+    'To start interview, click start interview button'
+  ];
   // late html.MediaRecorder mediaRecorder;
 
   @override
   void initState() {
     super.initState();
     asynFuct();
-    window.history.pushState(null, '', window.location.href);
-    window.addEventListener('popstate', (event) {
-      return window.history.go(1);
-    });
+
+    // window.history.pushState(null, '', window.location.href);
+    // window.addEventListener('popstate', (event) {
+    //   event.preventDefault();
+    //   event.stopPropagation();
+    //   return window.history.go(1);
+    // });
   }
 
   @override
@@ -58,14 +66,53 @@ class _ChatScreenState extends State<ChatScreen> {
         isLoadingPage = false;
       });
     }
+    // if (user != null) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     showDialog(
+    //         context: context,
+    //         barrierDismissible: false,
+    //         barrierColor: kPrimaryBlue,
+    //         builder: (context) {
+    //           return Dialog(
+    //               shape: RoundedRectangleBorder(
+    //                 borderRadius: BorderRadius.circular(26),
+    //               ),
+    //               child: Container(
+    //                 width: MediaQuery.of(context).size.width * 0.3,
+    //                 padding: const EdgeInsets.symmetric(
+    //                     vertical: 28, horizontal: 38),
+    //                 child: Column(
+    //                   mainAxisSize: MainAxisSize.min,
+    //                   children: [
+    //                     Text(
+    //                       "Halo, ${user?.name}",
+    //                       style: const TextStyle(
+    //                         fontSize: 24,
+    //                         fontWeight: FontWeight.bold,
+    //                       ),
+    //                     ),
+    //                     const SizedBox(height: 20),
+    //                     const Text(
+    //                       'We will let you know when the results are out',
+    //                       textAlign: TextAlign.center,
+    //                       style: TextStyle(
+    //                           fontSize: 15.5, fontWeight: FontWeight.w500),
+    //                     ),
+    //                     ElevatedButton(
+    //                         onPressed: () {
+    //                           context.pop();
+    //                           setState(() {
+    //                             _isShowDialog = true;
+    //                           });
+    //                         },
+    //                         child: const Text('Les go!'))
+    //                   ],
+    //                 ),
+    //               ));
+    //         });
+    //   });
+    // }
   }
-
-  // void checkIsFinish() {
-  //   if (user?.status == 1) {
-  //     widget.recorder.stop();
-  //   }
-  //   mediaRecorder = widget.recorder;
-  // }
 
   void askGpt(String question) async {
     setState(() {
@@ -147,317 +194,470 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        print('DIJALANKAN');
-        return false;
-      },
-      child: Scaffold(
-        appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(110),
-            child: Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              color: kPrimaryBlue,
-              height: 110,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'INTELLITALK INTERVIEW',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: kWhite,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        '${user?.position ?? ''} - ${user?.division.toUpperCase()}',
-                        style: const TextStyle(
-                          fontSize: 15,
-                          color: kWhite,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.31,
-                  ),
-                  isLoadingPage == true
-                      ? const SizedBox(
-                          width: 0,
-                        )
-                      : Container(
-                          margin: const EdgeInsets.only(right: 40),
-                          child: isInterviewEnded == true || user!.status == 1
-                              ? const SizedBox(
-                                  width: 90,
-                                )
-                              : SlideCountdownSeparated(
-                                  textStyle: const TextStyle(
-                                      color: kWhite,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17),
-                                  decoration: const BoxDecoration(),
-                                  separatorStyle: const TextStyle(
-                                      color: kWhite,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 17),
-                                  onDone: () async {
-                                    setState(() {
-                                      isInterviewEnded = true;
-                                    });
-                                    be
-                                        .postConversation(
-                                            conversations, user!.name, user!.id)
-                                        .then((value) => showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (context) {
-                                              return Dialog(
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            26),
-                                                  ),
-                                                  child: Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.3,
-                                                    padding: const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 28,
-                                                        horizontal: 38),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: const [
-                                                        Text(
-                                                          "Time's Up!",
-                                                          style: TextStyle(
-                                                            fontSize: 24,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 20),
-                                                        Text(
-                                                          'Thank you for participating on this interview!',
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                              fontSize: 16,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ));
-                                            }));
-                                  },
-                                  duration:
-                                      Duration(minutes: user!.quantity * 3),
-                                ),
-                        )
-                ],
-              ),
-            )),
-        body: isLoadingPage == true
-            ? SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            : user!.status == 1
-                ? const Center(
-                    child: Text(
-                    "Sesi interview sudah berakhir.\n\nHarap periksa email anda secara berkala untuk mengetahui hasil interview ini\nTerima Kasih",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 19),
-                  ))
-                : SingleChildScrollView(
-                    controller: _chatScrollController,
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              constraints: BoxConstraints(
-                                  maxWidth:
-                                      MediaQuery.of(context).size.width * 0.5),
-                              margin: const EdgeInsets.only(bottom: 12),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: kGrey2),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 14, horizontal: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Arkademi',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: kPrimaryBlue,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                      'Halo ${user!.name} selamat datang di interview arkademi! sekarang kita akan mulai interview, ketik "Saya siap" jika kamu sudah siap',
-                                      textAlign: TextAlign.left,
-                                      maxLines: 4,
-                                      style: const TextStyle(
-                                        fontSize: 15,
-                                        color: kBlack,
-                                      )),
-                                ],
-                              ),
-                            ),
-                            for (int i = 0; i < conversations.length; i++)
-                              Row(
-                                children: [
-                                  i % 2 == 0
-                                      ? const Spacer()
-                                      : const SizedBox(),
-                                  Container(
-                                    constraints: BoxConstraints(
-                                        maxWidth:
-                                            MediaQuery.of(context).size.width *
-                                                0.5),
-                                    margin: const EdgeInsets.only(bottom: 12),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 14, horizontal: 10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color:
-                                          i % 2 == 0 ? kSecondaryBlue : kGrey2,
-                                    ),
-                                    child: i % 2 == 0
-                                        ? Text(
-                                            conversations[i],
-                                            style: TextStyle(
-                                                color: i % 2 == 0
-                                                    ? kWhite
-                                                    : kBlack),
-                                            maxLines: 10,
-                                            textAlign: i % 2 == 0
-                                                ? TextAlign.right
-                                                : TextAlign.left,
-                                          )
-                                        : Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                'Arkademi',
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: kPrimaryBlue),
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              Text(
-                                                conversations[i],
-                                                style: const TextStyle(
-                                                    fontSize: 15,
-                                                    color: kBlack),
-                                                maxLines: 10,
-                                                textAlign: TextAlign.left,
-                                              ),
-                                            ],
-                                          ),
-                                  ),
-                                ],
-                              ),
-                            isLoadingResponse == true
-                                ? const SizedBox(
-                                    height: 40,
-                                    width: 40,
-                                    child: CircularProgressIndicator())
-                                : const SizedBox(),
-                          ]),
-                    ),
-                  ),
-        bottomNavigationBar: isLoadingPage == true
-            ? const SizedBox()
-            : (isLoadingPage == false &&
-                    (isInterviewEnded == true || user!.status == 1))
-                ? const SizedBox()
-                : Container(
-                    color: kPrimaryBlue,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+    return isLoadingPage
+        ? const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+        : isLoadingPage == false && _isShowDialog == false
+            ? Scaffold(
+                body: Row(children: [
+                  Container(
+                    color: kWhite,
+                    padding: EdgeInsets.only(
+                        right: MediaQuery.of(context).size.width * 0.03,
+                        top: MediaQuery.of(context).size.width * 0.03,
+                        left: MediaQuery.of(context).size.width * 0.07),
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 25),
-                            child: Form(
-                              key: _formKey,
-                              child: TextFormField(
-                                controller: _chatController,
-                                onFieldSubmitted: (value) {
-                                  if (_formKey.currentState!.validate() ==
-                                      true) {
-                                    askGpt(_chatController.text);
-                                  }
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return '* Kamu belum mengetik apapun';
-                                  } else if (value.toLowerCase() !=
-                                          'Saya siap'.toLowerCase() &&
-                                      firstTry == true) {
-                                    return '* Katakan saya siap terlebih dahulu';
-                                  }
-                                  return null;
-                                },
-                                decoration: InputDecoration(
-                                  hintText: 'Ketik Pesan',
-                                  errorStyle:
-                                      const TextStyle(color: Colors.white),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                        Image.asset(
+                          '/images/logo_arkademi_blue.png',
+                          height: 40,
                         ),
-                        // const SizedBox(width: 10),
-                        InkWell(
-                          onTap: () {
-                            if (_formKey.currentState!.validate() == true) {
-                              askGpt(_chatController.text);
-                            }
-                          },
-                          child: const Icon(Icons.send_rounded,
-                              size: 44, color: kSecondaryBlue),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.2),
+                        Text('Hello, ${user!.name}'),
+                        const SizedBox(height: 28),
+                        const Text(
+                          'Welcome to\nArkademi Intellitalk',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 28),
                         ),
-                        const SizedBox(width: 20)
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.1),
+                        const Text('Estimated Interview Duration'),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${user!.quantity * 3} mins',
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w500),
+                        ),
                       ],
                     ),
                   ),
-      ),
-    );
+                  Container(
+                    color: kPrimaryBlue,
+                    alignment: Alignment.center,
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    height: MediaQuery.of(context).size.height,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: MediaQuery.of(context).size.width * 0.04),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Instructions',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: kWhite,
+                              fontSize: 26),
+                        ),
+                        const SizedBox(height: 24),
+                        for (int i = 0; i < instruction.length; i++)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 3),
+                                  child: Text(
+                                    '${i + 1}.',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: kWhite,
+                                        fontSize: 15),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    instruction[i],
+                                    maxLines: 5,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.5,
+                                        color: kWhite,
+                                        fontSize: 15),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        const SizedBox(height: 50),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: kSecondaryBlue,
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 24, horizontal: 34)),
+                          onPressed: () {
+                            setState(() {
+                              _isShowDialog = true;
+                            });
+                          },
+                          child: const Text(
+                            'Start Interview',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          '*Please remember, you can only access this interview once,\ndo your best!',
+                          maxLines: 5,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                              color: kWhite,
+                              fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ]),
+              )
+            : Scaffold(
+                appBar: PreferredSize(
+                    preferredSize: const Size.fromHeight(110),
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      color: kPrimaryBlue,
+                      height: 110,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'INTELLITALK INTERVIEW',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: kWhite,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                '${user?.position ?? ''} - ${user?.division.toUpperCase()}',
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  color: kWhite,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.31,
+                          ),
+                          isLoadingPage == true
+                              ? const SizedBox(
+                                  width: 0,
+                                )
+                              : Container(
+                                  margin: const EdgeInsets.only(right: 40),
+                                  child: isInterviewEnded == true ||
+                                          user!.status == 1 ||
+                                          _isShowDialog == false
+                                      ? const SizedBox(
+                                          width: 90,
+                                        )
+                                      : SlideCountdownSeparated(
+                                          textStyle: const TextStyle(
+                                              color: kWhite,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 17),
+                                          decoration: const BoxDecoration(),
+                                          separatorStyle: const TextStyle(
+                                              color: kWhite,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 17),
+                                          onDone: () async {
+                                            setState(() {
+                                              isInterviewEnded = true;
+                                            });
+                                            be
+                                                .postConversation(conversations,
+                                                    user!.name, user!.id)
+                                                .then((value) => showDialog(
+                                                    context: context,
+                                                    barrierDismissible: false,
+                                                    builder: (context) {
+                                                      return Dialog(
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        26),
+                                                          ),
+                                                          child: Container(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.3,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                        .symmetric(
+                                                                    vertical:
+                                                                        28,
+                                                                    horizontal:
+                                                                        38),
+                                                            child: Column(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: const [
+                                                                Text(
+                                                                  "Time's Up!",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        24,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                    height: 20),
+                                                                Text(
+                                                                  'Thank you for participating on this interview!',
+                                                                  textAlign:
+                                                                      TextAlign
+                                                                          .center,
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ));
+                                                    }));
+                                          },
+                                          duration: Duration(
+                                              minutes: user!.quantity * 3),
+                                        ),
+                                )
+                        ],
+                      ),
+                    )),
+                body: isLoadingPage == true
+                    ? SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : user!.status == 1
+                        ? const Center(
+                            child: Text(
+                            "Sesi interview sudah berakhir.\n\nHarap periksa email anda secara berkala untuk mengetahui hasil interview ini\nTerima Kasih",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 19),
+                          ))
+                        : SingleChildScrollView(
+                            controller: _chatScrollController,
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      constraints: BoxConstraints(
+                                          maxWidth: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.5),
+                                      margin: const EdgeInsets.only(bottom: 12),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          color: kGrey2),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 14, horizontal: 10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            'Arkademi',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: kPrimaryBlue,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                              'Halo ${user!.name} selamat datang di interview arkademi! sekarang kita akan mulai interview, ketik "Saya siap" jika kamu sudah siap',
+                                              textAlign: TextAlign.left,
+                                              maxLines: 4,
+                                              style: const TextStyle(
+                                                fontSize: 15,
+                                                color: kBlack,
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                    for (int i = 0;
+                                        i < conversations.length;
+                                        i++)
+                                      Row(
+                                        children: [
+                                          i % 2 == 0
+                                              ? const Spacer()
+                                              : const SizedBox(),
+                                          Container(
+                                            constraints: BoxConstraints(
+                                                maxWidth: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.5),
+                                            margin: const EdgeInsets.only(
+                                                bottom: 12),
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 14, horizontal: 10),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: i % 2 == 0
+                                                  ? kSecondaryBlue
+                                                  : kGrey2,
+                                            ),
+                                            child: i % 2 == 0
+                                                ? Text(
+                                                    conversations[i],
+                                                    style: TextStyle(
+                                                        color: i % 2 == 0
+                                                            ? kWhite
+                                                            : kBlack),
+                                                    maxLines: 10,
+                                                    textAlign: i % 2 == 0
+                                                        ? TextAlign.right
+                                                        : TextAlign.left,
+                                                  )
+                                                : Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      const Text(
+                                                        'Arkademi',
+                                                        style: TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            color:
+                                                                kPrimaryBlue),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                        conversations[i],
+                                                        style: const TextStyle(
+                                                            fontSize: 15,
+                                                            color: kBlack),
+                                                        maxLines: 10,
+                                                        textAlign:
+                                                            TextAlign.left,
+                                                      ),
+                                                    ],
+                                                  ),
+                                          ),
+                                        ],
+                                      ),
+                                    isLoadingResponse == true
+                                        ? const SizedBox(
+                                            height: 40,
+                                            width: 40,
+                                            child: CircularProgressIndicator())
+                                        : const SizedBox(),
+                                  ]),
+                            ),
+                          ),
+                bottomNavigationBar: isLoadingPage == true
+                    ? const SizedBox()
+                    : (isLoadingPage == false &&
+                            (isInterviewEnded == true || user!.status == 1))
+                        ? const SizedBox()
+                        : Container(
+                            color: kPrimaryBlue,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 20, horizontal: 25),
+                                    child: Form(
+                                      key: _formKey,
+                                      child: TextFormField(
+                                        controller: _chatController,
+                                        onFieldSubmitted: (value) {
+                                          if (_formKey.currentState!
+                                                  .validate() ==
+                                              true) {
+                                            askGpt(_chatController.text);
+                                          }
+                                        },
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return '* Kamu belum mengetik apapun';
+                                          } else if (value.toLowerCase() !=
+                                                  'Saya siap'.toLowerCase() &&
+                                              firstTry == true) {
+                                            return '* Katakan saya siap terlebih dahulu';
+                                          }
+                                          return null;
+                                        },
+                                        decoration: InputDecoration(
+                                          hintText: 'Ketik Pesan',
+                                          errorStyle: const TextStyle(
+                                              color: Colors.white),
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // const SizedBox(width: 10),
+                                InkWell(
+                                  onTap: () {
+                                    if (_formKey.currentState!.validate() ==
+                                        true) {
+                                      askGpt(_chatController.text);
+                                    }
+                                  },
+                                  child: const Icon(Icons.send_rounded,
+                                      size: 44, color: kSecondaryBlue),
+                                ),
+                                const SizedBox(width: 20)
+                              ],
+                            ),
+                          ),
+              );
   }
 }

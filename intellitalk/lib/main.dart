@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intellitalk/env/env.dart';
 import 'package:intellitalk/src/presentations/auth/login_screen.dart';
-import 'package:intellitalk/src/presentations/preparation/preparation_screen.dart';
 
 import 'src/presentations/admin/admin_screen.dart';
 import 'src/presentations/conversation/conversation_screen.dart';
@@ -42,15 +41,15 @@ final GoRouter _router = GoRouter(
         );
       },
     ),
-    GoRoute(
-      name: 'preparation',
-      path: '/preparation/:prepId',
-      builder: (context, state) {
-        return PreparationScreen(
-          convoId: state.pathParameters['prepId']!,
-        );
-      },
-    )
+    // GoRoute(
+    //   name: 'preparation',
+    //   path: '/preparation/:prepId',
+    //   builder: (context, state) {
+    //     return PreparationScreen(
+    //       convoId: state.pathParameters['prepId']!,
+    //     );
+    //   },
+    // )
   ],
 );
 
